@@ -4,7 +4,7 @@
       <div class="app-title">
         <div>
           <h1><i class="fa fa-edit"></i>Add Bank</h1>
-          <p>Add Bank Form</p>
+          <p>Add-Bank Form</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
