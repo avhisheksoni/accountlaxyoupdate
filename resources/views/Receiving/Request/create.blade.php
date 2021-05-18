@@ -109,7 +109,7 @@
                             @foreach($item['purchaseStoreQty'] as $qty)
                               <td class="text-center"><div style="float: left;">{{$qty->quantity}} </div> 
                              <div>
-<input type="number" class="emp wharehouse"  name="itemcheck" min="0" style="width: 45px;marks: float: right;" max="{{$qty->quantity}}" data-warehouse="{{ $qty->warehouse_id  }}" data-item="{{$item->item_number}}" {{ $qty->quantity <= 0 ? 'disabled' : '' }}> </div>
+<input type="number" class="emp wharehouse"  name="itemcheck" min="0" style="width: 45px;marks: float: right;" max="{{$qty->quantity}}" data-warehouse="{{ $qty->warehouse_id  }}" data-item="{{$item->item_number}}" data-id="{{ $item->id }}" {{ $qty->quantity <= 0 ? 'disabled' : '' }} value=0> </div>
                               </td>
                             @endforeach
                             <td class="text-center">{{$item['unit']->name}}</td>
@@ -123,6 +123,7 @@
         </div>
       </div>
     </main>
+              
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
@@ -166,6 +167,7 @@ $(document).ready(function(){
       item['user']       = '{{ Auth::id() }}'
       item['item']       = $(this).data('item')
       item['qty']        = $(this).val()
+      item['item_id']    = $(this).data('id')
       item['warehouse']  = $(this).data('warehouse')
       site               = '{{ Session::get('site_id') }}'
       $.ajax({

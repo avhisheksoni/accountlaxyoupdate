@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Session;
+use App\Receiving;
 use App\job_master;
 use App\ReceivingReq;
 use App\PurchaseItem;
@@ -22,7 +23,7 @@ class ReceivingReqController extends Controller
      */
     public function index()
     {
-    	$requests = ReceivingReq::with(['warehouse', 'site'])->get();
+    	$requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])->get();
 
         return view('Receiving.Request.index', compact('requests'));
     }
@@ -80,22 +81,17 @@ class ReceivingReqController extends Controller
                     'receiving_request_id'	=>  $receivingReq->id,
                     'item_number'   		=>  $item->item_number,
                     'qty'					=>  $item->qty,
+                    'item_id'               =>  $item->item_id,
 
                 ]);
             }
-
+            Session::forget('site_id');
             TempReceiving::where('user_id', $logged_user)
 							->where('warehouse_id', $warehouse)
                             ->delete();
     	}
 
     	return back()->with('success', 'Request has been sent');
-    }
-
-    
-    public function receivingStore(Request $request)
-    {
-        return 56574;
     }
 
     /**
@@ -202,8 +198,8 @@ class ReceivingReqController extends Controller
         $item_no   = $request->item['item'];
         $item_qty  = $request->item['qty'];
         $warehouse = $request->item['warehouse'];
+        $item_id = $request->item['item_id'];
 
-        //return $site_id;
 		$record = TempReceiving::where('user_id', $user)
 					->where('item_number', $item_no)
 					->where('warehouse_id', $warehouse)
@@ -218,7 +214,8 @@ class ReceivingReqController extends Controller
                     'user_id'    	=> $user,
                     'item_number'	=> $item_no,
                     'qty'        	=> $item_qty,
-                    'warehouse_id'  => $warehouse
+                    'warehouse_id'  => $warehouse,
+                    'item_id'       => $item_id
                 ]);
             }
 
@@ -266,12 +263,10 @@ class ReceivingReqController extends Controller
         $search = $request->search_items;
         $string = $request->type;
 
-
         if($search == ""){
             return redirect()->route('receiving.create');        
         }
 
-        //$query = $string == 'title' ? 'title' : 'item_number';
         $sites = job_master::all();
         $items = PurchaseItem::has('purchaseStoreQty')
         			->where($string, 'ilike', '%'.$search.'%')

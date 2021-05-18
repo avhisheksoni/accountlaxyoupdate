@@ -19,25 +19,24 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-        	 @if($message = Session::get('message'))
-      <div class="alert alert-success">  {{$message}}
-      </div>
-      @endif
-          <div class="tile">
+          @if($message = Session::get('message'))
+            <div class="alert alert-success">  {{$message}}</div>
+          @endif
+        <div class="tile">
 
             <div class="tile-body">
               <div class="table-responsive">
-                <table class="table  thead-dark" id="sampleTable">
+                <table class="table table-bordered thead-dark" id="sampleTable">
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
-                      <th class="text-center">Site</th>
-                      <th class="text-center">Warehouse</th>
-                      <th class="text-center">Remark</th>
-                      <th class="text-center">Manager</th>
-                      <th class="text-center">Admin</th>
-                      <th class="text-center">SubAdmin</th>
-                      <th class="text-center">Action</th>
+                      <th class="text-center">FROM</th>
+                      <th class="text-center">TO</th>
+                      <th class="text-center">DATE</th>
+                      <th class="text-center">MANAGER</th>
+                      <th class="text-center">ADMIN</th>
+                      <th class="text-center">SUBADMIN</th>
+                      <th class="text-center">ACTION</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -48,13 +47,13 @@
                       <td class="text-center">{{ ++$count }}</td>
                       <td>{{ $request['site']->job_describe }}</td>
                       <td class="text-center">{{ strtoupper($request['warehouse']->name) }}</td>
-                      <td>{{ $request->remark }}</td>
+                      <td class="text-center">{{ date("M d, Y : h:i A", strtotime($request->created_at)) }}</td>
                       <td class="text-center">Pending</td>
                       <td class="text-center">Pending</td>
                       <td class="text-center">Pending</td>
                       <td class="text-center">
                         <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
-                        <a href="ryeye"><button class="btn btn-danger"><i class="fa fa-lg fa-trash"></i></button></a>
+                       {{--  <a href="ryeye"><button class="btn btn-danger"><i class="fa fa-lg fa-trash"></i></button></a> --}}
                       </td>
                     </tr>
                     @endforeach

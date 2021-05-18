@@ -20,8 +20,11 @@ class ReceivingReq extends Model
     }
 
     public function requestItems(){
-    	return $this->hasMany('App\ReceivingReqItem', 'receiving_id');
+    	return $this->hasMany('App\ReceivingReqItem', 'receiving_request_id');
     }
 
+    public function receiving(){
+        return $this->belongsTo('App\Receiving', 'return_receiving_id');
+    }
     
 }

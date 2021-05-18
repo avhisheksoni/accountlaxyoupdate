@@ -315,7 +315,7 @@ Route::get('/login/{username}/{pass}/', 'HomeController@loginuser')->name('userl
 Route::post('/logout', 'HomeController@logout')->name('logout');
 
 
-/*****Receivings*******/
+/*****Receiving*******/
 
 Route::resource('receiving-request', 'ReceivingReqController');
 Route::get('receiving-site', 'ReceivingReqController@receivingSite')->name('receiving-site');
@@ -323,4 +323,8 @@ Route::get('receiving-request/{id}/show', 'ReceivingReqController@showRequest')-
 Route::get('search-item', 'ReceivingReqController@searchItems')->name('receiving-searach-items');
 Route::get('receiving-log', 'ReceivingReqController@receivingLog')->name('receiving.log');
 Route::get('receiving-direct', 'ReceivingReqController@receivingDirect')->name('receiving.direct');
-//Route::post('receiving-store', 'ReceivingReqController@receivingStore')->name('receiving-store');
+
+/****Return Receiving *****/
+Route::resource('return-receiving', 'ReturnReceivingController');
+Route::post('return-fetch-items', 'ReturnReceivingController@fetchItems')->name('return.fetch-items');
+Route::post('return-receiving-site', 'ReturnReceivingController@returnReceivingSite')->name('return-receiving-site');

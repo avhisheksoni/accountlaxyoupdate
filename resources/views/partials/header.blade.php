@@ -194,8 +194,8 @@ input[type=number] {
           <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Receiving Management</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="{{route('receiving-request.index')}}"><i class="icon fa fa-circle-o"></i>Application for Items</a></li>
-            <li><a class="treeview-item" href="{{route('receiving.log')}}"><i class="icon fa fa-circle-o"></i>Application Log</a></li>
             <li><a class="treeview-item" href="{{route('receiving.direct')}}"><i class="icon fa fa-circle-o"></i>Application (Direct)</a></li>
+            <li><a class="treeview-item" href="{{route('receiving.log')}}"><i class="icon fa fa-circle-o"></i>Application Log</a></li>
              
           </ul>
         
