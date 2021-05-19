@@ -6,8 +6,7 @@
 <main class="app-content">
       <div class="app-title">
         <div class="row">
-          <h1><i class="fa fa-th-list"></i>Item Application</h1>
-          {{-- <p>All Record till Now</p> --}}&nbsp&nbsp
+          <h1><i class="fa fa-th-list"></i>Item Application</h1>&nbsp&nbsp
           <div><a href="{{ route('receiving-request.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
         </div>
         
@@ -35,7 +34,7 @@
                       <th class="text-center">DATE</th>
                       <th class="text-center">MANAGER</th>
                       <th class="text-center">ADMIN</th>
-                      <th class="text-center">SUBADMIN</th>
+                      <th class="text-center">SUP-ADMIN</th>
                       <th class="text-center">ACTION</th>
                     </tr>
                   </thead>
@@ -48,9 +47,45 @@
                       <td>{{ $request['site']->job_describe }}</td>
                       <td class="text-center">{{ strtoupper($request['warehouse']->name) }}</td>
                       <td class="text-center">{{ date("M d, Y : h:i A", strtotime($request->created_at)) }}</td>
-                      <td class="text-center">Pending</td>
-                      <td class="text-center">Pending</td>
-                      <td class="text-center">Pending</td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->manager == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->manager == 0 && $request['receiving']->complete == 1 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->admin == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->admin == 0 && $request['receiving']->complete == 1 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->super_admin == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->super_admin == 0 && $request['receiving']->complete == 1 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
                       <td class="text-center">
                         <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
                        {{--  <a href="ryeye"><button class="btn btn-danger"><i class="fa fa-lg fa-trash"></i></button></a> --}}

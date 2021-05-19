@@ -25,6 +25,7 @@ class ReceivingReqController extends Controller
     {
     	$requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])->get();
 
+    	//dd($requests[0]['receiving']->manager);
         return view('Receiving.Request.index', compact('requests'));
     }
 

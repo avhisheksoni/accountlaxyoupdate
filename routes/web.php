@@ -317,14 +317,20 @@ Route::post('/logout', 'HomeController@logout')->name('logout');
 
 /*****Receiving*******/
 
+/*_________Request_________*/
+
 Route::resource('receiving-request', 'ReceivingReqController');
 Route::get('receiving-site', 'ReceivingReqController@receivingSite')->name('receiving-site');
 Route::get('receiving-request/{id}/show', 'ReceivingReqController@showRequest')->name('receiving-request.show');
 Route::get('search-item', 'ReceivingReqController@searchItems')->name('receiving-searach-items');
 Route::get('receiving-log', 'ReceivingReqController@receivingLog')->name('receiving.log');
-Route::get('receiving-direct', 'ReceivingReqController@receivingDirect')->name('receiving.direct');
 
-/****Return Receiving *****/
+/*_____Return Receiving______*/
+
 Route::resource('return-receiving', 'ReturnReceivingController');
 Route::post('return-fetch-items', 'ReturnReceivingController@fetchItems')->name('return.fetch-items');
 Route::post('return-receiving-site', 'ReturnReceivingController@returnReceivingSite')->name('return-receiving-site');
+
+/*_____Receiving - Direct______*/
+
+Route::resource('request-new-item', 'ReceivingNewItemController');
