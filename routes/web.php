@@ -323,7 +323,8 @@ Route::resource('receiving-request', 'ReceivingReqController');
 Route::get('receiving-site', 'ReceivingReqController@receivingSite')->name('receiving-site');
 Route::get('receiving-request/{id}/show', 'ReceivingReqController@showRequest')->name('receiving-request.show');
 Route::get('search-item', 'ReceivingReqController@searchItems')->name('receiving-searach-items');
-Route::get('receiving-log', 'ReceivingReqController@receivingLog')->name('receiving.log');
+Route::post('receiving-req-approval', 'ReceivingReqController@requestApproval')->name('receiving-req.approval');
+Route::get('receiving-request-history', 'ReceivingReqController@history')->name('receiving-request.history');
 
 /*_____Return Receiving______*/
 
@@ -333,4 +334,14 @@ Route::post('return-receiving-site', 'ReturnReceivingController@returnReceivingS
 
 /*_____Receiving - Direct______*/
 
+Route::resource('receiving-direct', 'ReceivingDirectController');
+Route::get('receiving-direct-history', 'ReceivingDirectController@history')->name('receiving-direct.history');
+
+
+/*_____Receiving - New Items______*/
+
 Route::resource('request-new-item', 'ReceivingNewItemController');
+Route::get('manage-site-items', 'ReceivingNewItemController@manganesiteitems')->name('manage-site-items');
+Route::get('receiving-new-item-history', 'ReceivingDirectController@history')->name('receiving-newitem.history');
+
+

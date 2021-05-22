@@ -3,27 +3,27 @@
 
     <main class="app-content">
 		<div class="app-title">
-	        <div>
-	          <h1><i class="fa fa-edit"></i>Apply Here</h1>
-	          <p>Request Form</p>
-	        </div>
-	        <div class="row">
-			    <div class="col-12">
-			      <label class="alert alert-success "  id="msg" style="display: none;"></label> 
-			    </div>
-			    <div class="col-md-12">
-			      @if($message = Session::get('success'))
-			        <div class="alert alert-success alert-block">
-			          <button type="button" class="close" data-dismiss="alert">×</button>
-			          <p>{{ $message }} </p>
-			        </div>
-			      @endif
-			    </div>
-	  		</div>
-	        <ul >
-	          <a href="{{ route('request-new-item.index') }}"><button class="btn btn-info" >back </button></a>
-	        </ul>
-      	</div>
+      <div>
+        <h1><i class="fa fa-edit"></i>Apply Here</h1>
+        <p>Request Form</p>
+      </div>
+	    <div class="row">
+        <div class="col-12">
+          <label class="alert alert-success "  id="msg" style="display: none;"></label> 
+        </div>
+        <div class="col-md-12">
+          @if($message = Session::get('success'))
+  	        <div class="alert alert-success alert-block">
+  	          <button type="button" class="close" data-dismiss="alert">×</button>
+  	          <p>{{ $message }} </p>
+  	        </div>
+          @endif
+        </div>
+	  	</div>
+      <ul >
+        <a href="{{ route('request-new-item.index') }}"><button class="btn btn-info" >back </button></a>
+      </ul>
+    </div>
         <div class="col-md-12">
 			<div class="tile">
 	            @if ($errors->any())
@@ -36,8 +36,34 @@
 	                    </ul>
 	                </div>
 	            @endif
-            	<form action="" method="post">
+            	<form action="{{ route('request-new-item.store') }}" method="post">
                 	@csrf
+                  <div class="row">
+                    <div class="col-6 form-group">
+                      <label for="">Employee Name</label>
+                      <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly="">
+                      <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                      
+                    </div>
+                    <div class="col-6 form-group">
+                      <label for="current_site">Current Site</label>
+                      <select name="current_site" class="form-control " >
+                        <option value="">Select a Site</option>
+                        @foreach($sites as $site)
+                          <option value="{{$site->id}}">{{$site->job_describe}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <div class="col-6 form-group">
+                      <label for="current_site">Warehouse</label>
+                      <select name="warehouse" data-srno="1" class="form-control input-sm" required="">
+                        <option value="warehouse_id">Select a Site</option>
+                        @foreach($warehouses as $warehouse)
+                          <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
 					<table id="invoice-item-table" class="table table-bordered">
 			            <tr>
 			              	<th class="text-center" style="width: 5%;">#</th>
@@ -49,17 +75,15 @@
 			            <tr>
 							<td><span id="sr_no">1</span></td>
 			              	<td>
-								<input type="text" name="item_name[]" id="item_name1" class="form-control input-sm" />
-                      			<div id="itemList1"></div>
-			              		<input type="hidden" name="user_id[]" id="user_id1" class="form-control input-sm" value="{{ Auth::user()->id }}" />
+								<input type="text" name="item[1][name]" id="item_name1" class="form-control input-sm" required=""/>
 			              	</td>
 			              	<td>
 	                      		<div class="row">
 	                        		<div class="col-md-5">
-	    			              		<input type="number" name="quantity[]" id="quantity1" data-srno="1" class="form-control input-sm quantity" />
+	    			              		<input type="number" name="item[1][quantity]" id="quantity1" data-srno="1" class="form-control input-sm quantity" required=""/>
 	                        		</div>
 	                        		<div class="col-md-7">
-	                          			<select name="unit[]" id="unit1" data-srno="1" class="form-control input-sm unit" >
+	                          			<select name="item[1][unit_id]" id="unit1" data-srno="1" class="form-control input-sm unit" required="">
 	                          				<option value="">Units</option>
 	                          				@foreach($units as $unit)
 	                              			<option value="{{$unit->id}}">{{$unit->name}}</option>
@@ -69,7 +93,7 @@
 	                      		</div>
 			              	</td>
 							<td>
-				            	<textarea name="description[]" id="description1" data-srno="1" class="form-control input-sm number_only description"></textarea>
+				            	<textarea name="item[1][description]" id="description1" data-srno="1" class="form-control input-sm number_only description" required=""></textarea>
 							</td>
 							
 			            </tr>
@@ -160,9 +184,9 @@ $(document).ready(function(){
     html_code += '<tr id="row_id_'+count+'">';
     html_code += '<td><span id="sr_no">'+count+'</span></td>';
     
-    html_code += '<td><input type="text" name="item_name[]" id="item_name'+count+'" class="form-control input-sm" /><div id="itemList'+count+'"></div><input type="hidden" name="user_id[]" value="{{ Auth::user()->id }}" id="user_id'+count+'" class="form-control input-sm" /></td>';
-    html_code += '<td><div class="row"><div class="col-md-5"><input type="text" name="quantity[]" id="quantity'+count+'" data-srno="'+count+'" class="form-control input-sm number_only quantity" /></div><div class="col-md-7"><select name="unit[]" id="unit'+count+'" data-srno="'+count+'" class="form-control input-sm unit" ><option value="">Units</option>@foreach($units as $unit)<option value="{{$unit->id}}">{{ $unit->name }}</option>@endforeach</select></div></div></td>';
-    html_code += '<td><textarea name="description[]" id="description'+count+'" data-srno="'+count+'" class="form-control input-sm number_only description"></textarea></td>';
+    html_code += '<td><input type="text" name="item['+count+'][name]" id="item_name'+count+'" class="form-control input-sm" /></td>';
+    html_code += '<td><div class="row"><div class="col-md-5"><input type="number" name="item['+count+'][quantity]" id="quantity'+count+'" data-srno="'+count+'" class="form-control input-sm number_only quantity" /></div><div class="col-md-7"><select name="item['+count+'][unit_id]" id="unit'+count+'" data-srno="'+count+'" class="form-control input-sm unit" ><option value="">Units</option>@foreach($units as $unit)<option value="{{$unit->id}}">{{ $unit->name }}</option>@endforeach</select></div></div></td>';
+    html_code += '<td><textarea name="item['+count+'][description]" id="description'+count+'" data-srno="'+count+'" class="form-control input-sm number_only description"></textarea></td>';
     html_code += '<td><button type="button" name="remove_row" id="'+count+'" class="btn btn-danger btn-sm remove_row mt-3">x</button></td>';
     html_code += '</tr>';
     $('#invoice-item-table').append(html_code);

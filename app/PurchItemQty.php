@@ -11,4 +11,9 @@ class PurchItemQty extends Model
     protected $table= 'acco_item_quantity';
     protected $guarded = [];
     public $timestamps = true;
+
+    public function itemname(){
+
+    	return $this->belongsTo('App\PurchaseItem','item_number','item_id');
+    }
 }

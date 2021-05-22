@@ -7,10 +7,10 @@
             &nbsp&nbsp
           <div><a href="{{ route('request-new-item.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
         </div>
+        <ul >
+        <a href="{{ route('receiving-newitem.history') }}"><button class="btn btn-info" >History </button></a>
+      </ul>
         </div>
-        <!--<ul >
-          <a href=""><button class="btn btn-info" >back </button></a>
-        </ul> -->
       </div>
       <div class="row">
         <div class="col-md-12">
@@ -38,27 +38,27 @@
                   <tbody>
                     
                  @php $count = 0; @endphp
-                 
+                  @foreach($applications as $application)
                     <tr>
                       <td class="text-center">{{ ++$count }}</td>
-                      <td></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
+                      <td class="text-center">{{ $application['site']->job_describe }}</td>
+                      <td class="text-center">{{ $application['warehouse']->name }}</td>
+                      <td class="text-center">{{ $application->date }}</td>
                       <td class="text-center">
-                        
+                        <b>PENDING</b>
                       </td>
                       <td class="text-center">
-                       
+                       <b>PENDING</b>
                       </td>
                       <td class="text-center">
-                      
+                      <b>PENDING</b>
                       </td>
                       <td class="text-center">
-                        
+                        <a href="{{ route('request-new-item.show', $application->id ) }}"><button class="btn btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
                        
                       </td>
                     </tr>
-
+                  @endforeach
                   </tbody>
                 </table>
                

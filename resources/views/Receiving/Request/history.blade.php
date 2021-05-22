@@ -6,12 +6,12 @@
 <main class="app-content">
       <div class="app-title">
         <div class="row">
-          <h1><i class="fa fa-th-list"></i>Application for Item</h1>&nbsp&nbsp
+          <h1><i class="fa fa-th-list"></i>Item Application</h1>&nbsp&nbsp
           <div><a href="{{ route('receiving-request.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
         </div>
         
         <ul >
-        <a href="{{ route('receiving-request.history') }}"><button class="btn btn-info" >History </button></a>
+        <a href="{{ route('receiving-request.index') }}"><button class="btn btn-info" >Back </button></a>
       </ul>
       </div>
       <div class="row">
@@ -38,7 +38,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                  	
+                    
                  @php $count = 0; @endphp
                    @foreach($requests as $request)
                     <tr>
@@ -86,7 +86,7 @@
                         @endif
                       </td>
                       <td class="text-center">
-                        <a href="{{ route('receiving-direct.show', $request->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+                        <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
                       </td>
                       <td>
                         @if($request['receiving'] != null)
@@ -95,11 +95,11 @@
                           @elseif($request->status == 2 )
                             <span style="color: red"><b>DECLINED</b></span>
                           @elseif($request['receiving']->super_admin == 1 && $request->status == 0 )
-                            <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-check" aria-hidden="true"></i></button>
+                            {{-- <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-check" aria-hidden="true"></i></button> --}}
 
                             <span style="color: blue; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
 
-                            <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            {{-- <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-times" aria-hidden="true"></i></button> --}}
 
                             <span style="color: red; display: none;" id="declineMsg_{{ $request->id }}"><b>DECLINED</b></span>
                           @endif

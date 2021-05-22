@@ -19,4 +19,9 @@ class PurchaseItem extends Model
     public function unit(){
     	return $this->belongsTo('App\UnitMeasure', 'unit_id', 'id');
     }
+
+    // public function itemname(){
+
+    //     return $this->belongTo('App\PurchItemQty','item_number','item_id');
+    // }
 }

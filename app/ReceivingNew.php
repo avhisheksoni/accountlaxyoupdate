@@ -5,11 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReceivingReq extends Model
+class ReceivingNew extends Model
 {
-    protected $table	= 'acco_receiving_request';
-    protected $guarded	= [];
-    public $timestamps	= true;
+    protected $table= 'acco_new_receiving';
+    protected $guarded = [];
 
     public function site(){
     	return $this->belongsTo('App\JobMaster', 'site_id');
@@ -19,12 +18,12 @@ class ReceivingReq extends Model
     	return $this->belongsTo('App\PurchaseWarehouse', 'warehouse_id');
     }
 
-    public function requestItems(){
-    	return $this->hasMany('App\ReceivingReqItem', 'receiving_request_id');
+    public function items(){
+        return $this->hasMany('App\ReceivingNewItem', 'new_receiving_id');
     }
 
     public function receiving(){
-        return $this->belongsTo('App\Receiving', 'return_receiving_id');
+        return $this->belongsTo('App\Receiving', 'receiving_id');
     }
-    
+
 }

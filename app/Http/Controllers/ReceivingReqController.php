@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Auth;
 use Session;
 use App\Receiving;
-use App\job_master;
+use App\JobMaster;
 use App\ReceivingReq;
 use App\PurchaseItem;
 use App\PurchItemQty;
+use App\ReceivingItem;
 use App\TempReceiving;
 use App\ReceivingReqItem;
 use App\PurchaseStoreItem;
+use App\site_item_quantity;
 use Illuminate\Http\Request;
 
 class ReceivingReqController extends Controller
@@ -23,9 +25,8 @@ class ReceivingReqController extends Controller
      */
     public function index()
     {
-    	$requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])->get();
+    $requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])->where('status', 0)->get();
 
-    	//dd($requests[0]['receiving']->manager);
         return view('Receiving.Request.index', compact('requests'));
     }
 
@@ -36,7 +37,7 @@ class ReceivingReqController extends Controller
      */
     public function create()
     {
-    	$sites = job_master::all();
+    	$sites = JobMaster::all();
 
     	$items = PurchaseItem::has('purchaseStoreQty')
     				->select('id', 'item_number', 'title', 'unit_id')
@@ -108,7 +109,7 @@ class ReceivingReqController extends Controller
     					->get();
     	$total_qty = TempReceiving::where('user_id', $user)
     					->sum('qty');
-    	$site = job_master::where('id', Session::get('site_id'))->first();
+    	$site = JobMaster::where('id', Session::get('site_id'))->first();
 
         $table = '<form action="'.route('receiving-request.store').'" method="post">
         <input type="hidden" name="_token" value="'.csrf_token().'">
@@ -245,7 +246,7 @@ class ReceivingReqController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return 524;
     }
 
     /**
@@ -268,7 +269,7 @@ class ReceivingReqController extends Controller
             return redirect()->route('receiving.create');        
         }
 
-        $sites = job_master::all();
+        $sites = JobMaster::all();
         $items = PurchaseItem::has('purchaseStoreQty')
         			->where($string, 'ilike', '%'.$search.'%')
         			->paginate(20);
@@ -276,8 +277,44 @@ class ReceivingReqController extends Controller
         return view('Receiving.Request.create', compact('items', 'sites'));
     }
 
-    public function receivingLog(){
-        return view('Receiving.Log.index');
+    public function requestApproval(Request $request){
+
+        // ReceivingReq::where('id', $request->request_id)
+        //     ->update(['status' => $request->btnValue]);
+
+        $receiving_items = ReceivingItem::where('receiving_id', $request->receiving_id)->get();
+
+        if($request->btnValue == 1){
+
+            /*foreach($receiving_items as $item){
+
+                site_item_quantity::where('item_id', $item->item_id)
+                    ->where('site_id', $item->site_id)
+                    ->increment('quantity', $item->qty);
+
+            }*/
+
+            $flag = 1;
+        }elseif($request->btnValue == 2){
+            /*foreach($receiving_items as $item){
+
+                PurchaseStoreItem::where('item_id', $$item->item_id)
+                    ->where('warehouse_id', $item->warehouse_id)
+                    ->increment('quantity', $item_qty);
+            }*/
+
+            $flag = 2;
+        }
+
+        return $flag;
+    }
+
+    public function history(){
+
+        $requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])
+                        ->where('status', '<>', 0)->get();
+
+        return view('Receiving.Request.history', compact('requests'));
     }
 
     public function receivingDirect(){

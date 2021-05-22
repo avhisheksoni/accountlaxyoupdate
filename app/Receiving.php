@@ -12,5 +12,16 @@ class Receiving extends Model
     protected $guarded = [];
     public $timestamps = true;
 
+    public function site(){
+    	return $this->belongsTo('App\JobMaster', 'site_id');
+    }
+
+    public function warehouse(){
+    	return $this->belongsTo('App\PurchaseWarehouse', 'warehouse_id');
+    }
+
+    public function requestItems(){
+    	return $this->hasMany('App\ReceivingItem', 'receiving_id');
+    }
     
 }

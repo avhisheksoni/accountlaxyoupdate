@@ -6,12 +6,12 @@
 <main class="app-content">
       <div class="app-title">
         <div class="row">
-          <h1><i class="fa fa-th-list"></i>Application for Item</h1>&nbsp&nbsp
-          <div><a href="{{ route('receiving-request.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
+          <h1><i class="fa fa-th-list"></i>Item Application (Direct)</h1>&nbsp&nbsp
+          <div><a href="{{ route('receiving-direct.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
         </div>
         
         <ul >
-        <a href="{{ route('receiving-request.history') }}"><button class="btn btn-info" >History </button></a>
+        <a href="{{ route('receiving-direct.history') }}"><button class="btn btn-info" >History </button></a>
       </ul>
       </div>
       <div class="row">
@@ -38,7 +38,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                  	
+                    
                  @php $count = 0; @endphp
                    @foreach($requests as $request)
                     <tr>
@@ -86,7 +86,7 @@
                         @endif
                       </td>
                       <td class="text-center">
-                        <a href="{{ route('receiving-direct.show', $request->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+                        <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
                       </td>
                       <td>
                         @if($request['receiving'] != null)

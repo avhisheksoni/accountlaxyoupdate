@@ -40,4 +40,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    //  public function roles()
+    // {
+    //     // you will need a role model
+    //     // Role::class is equivalent to string 'App\Role'
+    //     return $this->belongsToMany( App\Role::class, 'users_role' );
+    // }
 }

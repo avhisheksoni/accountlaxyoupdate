@@ -194,13 +194,22 @@ input[type=number] {
           <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Receiving Management</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="{{route('receiving-request.index')}}"><i class="icon fa fa-circle-o"></i>Application for Items</a></li>
+            <li><a class="treeview-item" href="{{route('receiving-direct.index')}}"><i class="icon fa fa-circle-o"></i>Application (Direct)</a></li>
             <li><a class="treeview-item" href="{{route('request-new-item.index')}}"><i class="icon fa fa-circle-o"></i>Application for New Items</a></li>
-            <li><a class="treeview-item" href="{{route('receiving.log')}}"><i class="icon fa fa-circle-o"></i>Application Log</a></li>
              
           </ul>
         
         </li>
+       {{--   @role('acco_manager') --}}
+          <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Sites Items</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            {{-- <li><a class="treeview-item" href=""><i class="icon fa fa-circle-o"></i>Bank</a></li> --}}
 
+            <li><a class="treeview-item" href="{{ route('manage-site-items') }}"><i class="icon fa fa-circle-o"></i> Site Item Details</a></li>
+          </ul>
+        
+        </li>
+    {{--   @endrole --}}
       {{--   <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Manage sites</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
            {{--  @role('acco_super_admin')
@@ -235,6 +244,7 @@ input[type=number] {
         
         </li>
          @endrole 
+
       </ul>
     </aside>
 <style type="text/css">

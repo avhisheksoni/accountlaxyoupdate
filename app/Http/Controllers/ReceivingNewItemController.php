@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use Auth;
 use Session;
 use App\Receiving;
-use App\job_master;
+use App\JobMaster;
+use Carbon\Carbon;
+use App\UnitMeasure;
+use App\site_manager;
 use App\ReceivingReq;
 use App\PurchaseItem;
+use App\ReceivingNew;
 use App\PurchItemQty;
 use App\TempReceiving;
 use App\ReceivingReqItem;
-use App\UnitMeasure;
+use App\ReceivingNewItem;
 use App\PurchaseStoreItem;
+use App\PurchaseWarehouse;
 use Illuminate\Http\Request;
 
 class ReceivingNewItemController extends Controller
@@ -24,9 +29,11 @@ class ReceivingNewItemController extends Controller
      */
     public function index(){
 
-    	$requests	= ReceivingReq::with(['warehouse', 'site', 'receiving'])->get();
-    	//dd($requests[0]['receiving']->manager);
-        return view('Receiving.NewItem.index');
+    	$applications	= ReceivingNew::with(['warehouse', 'site', 'receiving'])
+                            ->where('user_id', Auth::id())
+                            ->get();
+
+        return view('Receiving.NewItem.index', compact('applications'));
     }
 
     /**
@@ -36,8 +43,11 @@ class ReceivingNewItemController extends Controller
      */
     public function create(){
 
-    	$units 	= UnitMeasure::all();
-    	return view('Receiving.NewItem.create', compact('units'));
+        $sites       = JobMaster::all();
+    	$units 	     = UnitMeasure::all();
+        $warehouses  = PurchaseWarehouse::all();
+
+    	return view('Receiving.NewItem.create', compact('sites', 'warehouses', 'units'));
     }
 
     /**
@@ -48,7 +58,32 @@ class ReceivingNewItemController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request['item']);
+        $zone= Carbon::now('Asia/Kolkata');
+        $newReceiving = ReceivingNew::create([
+                            'site_id'       => $request->current_site,
+                            'warehouse_id'  => $request->warehouse,
+                            'user_id'       => Auth::id(),
+                            'date'          => $zone->format('Y-m-d H:i:s')
+                        ]);
 
+        $totalQty = 0;
+        foreach($request['item'] as $item){
+
+            ReceivingNewItem::create([
+                'new_receiving_id'  =>  $newReceiving['id'],
+                'name'              =>  $item['name'],
+                'qty'               =>  $item['quantity'],
+                'unit_id'           =>  $item['unit_id'],
+                'remark'            =>  $item['description']
+            ]);
+
+            $totalQty = $totalQty+$item['quantity'];
+        }
+
+        ReceivingNew::where('id', $newReceiving['id'])->update(['total_qty' => $totalQty]);
+
+        return redirect()->route('request-new-item.index')->with('success', 'Request has been submitted.');
     }
 
     /**
@@ -59,7 +94,11 @@ class ReceivingNewItemController extends Controller
      */
     public function show(Request $request, $id)
     {
-    	
+        $application   = ReceivingNew::with(['warehouse', 'site', 'receiving', 'items'])
+                            ->where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->first();
+    	return view('Receiving.NewItem.show', compact('application'));
     }
 
     /**
@@ -94,5 +133,14 @@ class ReceivingNewItemController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function manganesiteitems(){
+
+      $user_id = Auth()->user()->id;
+      $site_id = site_manager::where('user_id',$user_id)->where('deleted_at','=',null)->first()->site_id;
+      $alloteitem = PurchItemQty::where('site_id',$site_id)->get();
+        
+        return view('Receiving.NewItem.siteitemlist', compact('alloteitem'));
     }
 }
