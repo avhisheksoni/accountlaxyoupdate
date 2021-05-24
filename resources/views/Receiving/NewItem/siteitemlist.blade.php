@@ -6,13 +6,13 @@
 <main class="app-content">
       <div class="app-title">
         <div>
-          <h1><i class="fa fa-th-list"></i>Banks</h1>
+          <h1><i class="fa fa-th-list"></i>Item With Sites</h1>
           <p>All Record till Now</p>
         </div>
         <ul class="app-breadcrumb breadcrumb side">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item">Banks</li>
-          <li class="breadcrumb-item active"><a href="">Bank-From</a></li>
+          <li class="breadcrumb-item">Item With Sites</li>
+          <li class="breadcrumb-item active"><a href="">Item With Sites</a></li>
         </ul>
       </div>
       <div class="row">
@@ -44,8 +44,8 @@
                
                     <tr>
                       <td>{{ $s_no++ }}</td>
-                      <td>{{ App\PurchaseItem::where('item_number',$item->item_id)->first()->title }}</td>
-                      <td>{{ $item->wareh_id}}</td>
+                      <td>{{ $item->itemdetails->title }}</td>
+                      <td>{{ $item->warehouse->name}}</td>
                       <td>{{ $item->quantity}}</td>
                      {{--  <td>yey</td> --}}
                      {{--  <td><a href=""><button class="btn btn-primary"><i class="fa fa-lg fa-eye"></i></button></a></td>
@@ -61,7 +61,7 @@
             </div>
           </div>
              <div class="tile-footer">
-                <a href=""><button class="btn btn-primary">Add Bank</button></a>
+               <marquee><h5 class="text-danger">Kindly Return Items To Warehouse as work Done</h5></marquee>
               </div>
         </div>
       </div>

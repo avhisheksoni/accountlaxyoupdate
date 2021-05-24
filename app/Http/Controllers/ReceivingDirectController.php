@@ -6,6 +6,7 @@ use Auth;
 use Session;
 use App\Receiving;
 use App\JobMaster;
+use App\SiteManager;
 use App\ReceivingReq;
 use App\PurchaseItem;
 use App\PurchItemQty;
@@ -25,8 +26,11 @@ class ReceivingDirectController extends Controller
      */
     public function index()
     {
-        $requests = Receiving::with(['warehouse', 'site', 'requestItems'])
-                        ->where('receiving_req_id', 0)->get();
+        $user_site = SiteManager::where('user_id', Auth::id())->first();
+
+        $requests = Receiving::with(['warehouse', 'site'])
+                        ->where('receiving_req_id', 0)
+                        ->where('site_id', $user_site->site_id)->get();
 
         return view('Receiving.Direct.index', compact('requests'));
     }
@@ -101,13 +105,14 @@ class ReceivingDirectController extends Controller
         //
     }
 
-    public function requestApproval(Request $request){
+    public function receivingApproval(Request $request){
 
-        // ReceivingReq::where('id', $request->request_id)
+        // Receiving::where('id', $request->receiving_id)
         //     ->update(['status' => $request->btnValue]);
 
         $receiving_items = ReceivingItem::where('receiving_id', $request->receiving_id)->get();
 
+        //dd($request->all());
         if($request->btnValue == 1){
 
             /*foreach($receiving_items as $item){
@@ -122,7 +127,7 @@ class ReceivingDirectController extends Controller
         }elseif($request->btnValue == 2){
             /*foreach($receiving_items as $item){
 
-                PurchaseStoreItem::where('item_id', $$item->item_id)
+                PurchaseStoreItem::where('item_id', $item->item_id)
                     ->where('warehouse_id', $item->warehouse_id)
                     ->increment('quantity', $item_qty);
             }*/
@@ -135,10 +140,12 @@ class ReceivingDirectController extends Controller
 
     public function history(){
 
-        $requests = Receiving::with(['warehouse', 'site', 'requestItems'])
-                        ->where('receiving_req_id', 0)->get();
+        $receivings = Receiving::where('receiving_req_id', 0)
+                        ->with(['requestItems' => function($query){
+                            $query->with(['purchaseItem']);
+                        }, 'warehouse', 'site'])->get();
 
-        return view('Receiving.Direct.history', compact('requests'));
+        return view('Receiving.Direct.history', compact('receivings'));
     }
 
 }

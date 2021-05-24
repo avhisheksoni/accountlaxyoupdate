@@ -7,11 +7,11 @@
       <div class="app-title">
         <div class="row">
           <h1><i class="fa fa-th-list"></i>Item Application (Direct)</h1>&nbsp&nbsp
-          <div><a href="{{ route('receiving-direct.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
+          <!-- <div><a href="{{ route('receiving-direct.create') }}"><button class="btn btn-sm btn-primary">+ Request</button></a></div> -->
         </div>
         
         <ul >
-        <a href="{{ route('receiving-direct.history') }}"><button class="btn btn-info" >History </button></a>
+        <a href="{{ route('receiving-direct.history') }}"><button class="btn btn-sm btn-info" ><i class="fa fa-history" aria-hidden="true"></i>History </button></a>
       </ul>
       </div>
       <div class="row">
@@ -47,63 +47,78 @@
                       <td class="text-center">{{ strtoupper($request['warehouse']->name) }}</td>
                       <td class="text-center">{{ date("M d, Y : h:i A", strtotime($request->created_at)) }}</td>
                       <td class="text-center">
-                        @if($request['receiving'] != null)
-                          @if($request['receiving']->manager == 1 )
-                            <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->manager == 0 && $request['receiving']->complete == 1 )
-                            <span style="color: red"><b>DECLINED</b></span>
-                          @else
-                            <b>PENDING</b>
-                          @endif
-                        @else
-                          <b>PENDING</b>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        @if($request['receiving'] != null)
-                          @if($request['receiving']->admin == 1 )
-                            <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->admin == 0 && $request['receiving']->complete == 1 )
-                            <span style="color: red"><b>DECLINED</b></span>
-                          @else
-                            <b>PENDING</b>
-                          @endif
-                        @else
-                          <b>PENDING</b>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        @if($request['receiving'] != null)
-                          @if($request['receiving']->super_admin == 1 )
-                            <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->super_admin == 0 && $request['receiving']->complete == 1 )
-                            <span style="color: red"><b>DECLINED</b></span>
-                          @else
-                            <b>PENDING</b>
-                          @endif
-                        @else
-                          <b>PENDING</b>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
-                      </td>
-                      <td>
-                        @if($request['receiving'] != null)
-                          @if($request->status == 1 )
-                            <span style="color: blue"><b>RECEIVED</b></span>
-                          @elseif($request->status == 2 )
-                            <span style="color: red"><b>DECLINED</b></span>
-                          @elseif($request['receiving']->super_admin == 1 && $request->status == 0 )
-                            <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-check" aria-hidden="true"></i></button>
 
-                            <span style="color: blue; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
+                        @if($request->manager == 1 )
 
-                            <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                          <span style="color: green"><b>APPROVED</b></span>
+
+                        @elseif($request->manager == 0 && $request->complete == 1 )
+
+                          <span style="color: red"><b>DECLINED</b></span>
+
+                        @else
+
+                          <b>PENDING</b>
+
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request->admin == 1 )
+
+                          <span style="color: green"><b>APPROVED</b></span>
+
+                        @elseif($request->admin == 0 && $request->complete == 1 )
+
+                          <b>PENDING</b>
+
+                        @elseif($request->admin == 0 && $request->complete == 2 )
+
+                          <span style="color: red"><b>DECLINED</b></span>
+
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request->super_admin == 1 )
+
+                          <span style="color: green"><b>APPROVED</b></span>
+
+                        @elseif($request->super_admin == 0 && $request->complete == 1 )
+
+                          <b>PENDING</b>
+
+                        @elseif($request->super_admin == 0 && $request->complete == 2 )
+
+                          <span style="color: red"><b>DECLINED</b></span>
+
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        <a href="{{ route('receiving-direct.show', $request->id ) }}"><button class="btn btn-sm btn-primary " title="Requested Items"id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+
+                        @if($request->super_admin == 1)
+                          <a href="{{ route('receiving-challan', $request->id ) }}"><button class="btn btn-sm btn-primary " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                          @if($request->applicant_status == 1 )
+
+                            <span style="color: #5e5ec5"><b>RECEIVED</b></span>
+
+                          @elseif($request->applicant_status == 2 )
+
+                            <span style="color: red"><b>DECLINED</b></span>
+
+                          @elseif($request->super_admin == 1 && $request->applicant_status == 0 )
+
+                            <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" title="Accept receiving" data-id="{{ $request->id }}" ><i class="fa fa-check" aria-hidden="true"></i></button>
+
+                            <span style="color: #5e5ec5; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
+
+                            <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" title="Decline receiving" data-id="{{ $request->id }}" ><i class="fa fa-times" aria-hidden="true"></i></button>
 
                             <span style="color: red; display: none;" id="declineMsg_{{ $request->id }}"><b>DECLINED</b></span>
+
                           @endif
-                        @endif
                       </td>
                     </tr>
                     @endforeach
@@ -130,26 +145,31 @@ $(document).ready(function(){
 
     $(document).on('click', '.approvalBtn', function(){ 
       var btnValue      = $(this).val()
-      var request_id    = $(this).data("id")
-      var receiving_id  = $(this).data("receiving")
+      var receiving_id  = $(this).data("id")
+      //var receiving_id  = $(this).data("receiving")
       var _token = $('input[name="_token"]').val();
 
-      alert([request_id, btnValue])
       $.ajax({
         type: "POST",
-        url: '{{ route('receiving-req.approval') }}',
-        data:{request_id:request_id, btnValue:btnValue, receiving_id:receiving_id, _token:_token},
+        url: '{{ route('receiving-direct.approval') }}',
+        data:{btnValue:btnValue, receiving_id:receiving_id, _token:_token},
+        beforeSend: function() { 
+                   $("#acceptBtn_"+receiving_id).text(' ...');
+                   $("#acceptBtn_"+receiving_id).attr('disabled',true);
+                   $("#declineBtn_"+receiving_id).text(' ...');
+                   $("#declineBtn_"+receiving_id).attr('disabled',true);
+                 },
         success:function(res){
           if(res == 1){
             
-            $('#acceptBtn_'+request_id).hide()
-            $('#declineBtn_'+request_id).hide()
-            $('#acceptMsg_'+request_id).show()
+            $('#acceptBtn_'+receiving_id).hide()
+            $('#declineBtn_'+receiving_id).hide()
+            $('#acceptMsg_'+receiving_id).show()
 
           }else if(res == 2){
-            $('#acceptBtn_'+request_id).hide()
-            $('#declineBtn_'+request_id).hide()
-            $('#declineMsg_'+request_id).show()
+            $('#acceptBtn_'+receiving_id).hide()
+            $('#declineBtn_'+receiving_id).hide()
+            $('#declineMsg_'+receiving_id).show()
           }
         }
       })

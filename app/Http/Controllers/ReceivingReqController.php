@@ -6,6 +6,7 @@ use Auth;
 use Session;
 use App\Receiving;
 use App\JobMaster;
+use App\SiteManager;
 use App\ReceivingReq;
 use App\PurchaseItem;
 use App\PurchItemQty;
@@ -25,7 +26,11 @@ class ReceivingReqController extends Controller
      */
     public function index()
     {
-    $requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])->where('status', 0)->get();
+        $site       = SiteManager::where('user_id', Auth::id())->first();
+
+        $requests   = ReceivingReq::with(['warehouse', 'site', 'receiving'])
+                        ->where('site_id', $site->site_id)
+                        ->where('status', 0)->get();
 
         return view('Receiving.Request.index', compact('requests'));
     }
@@ -37,7 +42,8 @@ class ReceivingReqController extends Controller
      */
     public function create()
     {
-    	$sites = JobMaster::all();
+    	$userSite  = SiteManager::with(['site'])
+                        ->where('user_id', Auth::id())->first();
 
     	$items = PurchaseItem::has('purchaseStoreQty')
     				->select('id', 'item_number', 'title', 'unit_id')
@@ -46,7 +52,7 @@ class ReceivingReqController extends Controller
     				}, 'unit'])
     				->paginate(25);
 
-        return view('Receiving.Request.create', compact('items', 'sites'));
+        return view('Receiving.Request.create', compact('userSite', 'items'));
     }
 
     /**
@@ -87,7 +93,7 @@ class ReceivingReqController extends Controller
 
                 ]);
             }
-            Session::forget('site_id');
+
             TempReceiving::where('user_id', $logged_user)
 							->where('warehouse_id', $warehouse)
                             ->delete();
@@ -104,20 +110,23 @@ class ReceivingReqController extends Controller
      */
     public function show($user)
     {
-    	$records = TempReceiving::where('user_id', $user)
+    	$records   = TempReceiving::where('user_id', $user)
     					->with(['item_name', 'warehouse', 'site'])
     					->get();
     	$total_qty = TempReceiving::where('user_id', $user)
     					->sum('qty');
-    	$site = JobMaster::where('id', Session::get('site_id'))->first();
+
+        $userSite  = SiteManager::with(['site'])
+                        ->where('user_id', Auth::id())->first();
 
         $table = '<form action="'.route('receiving-request.store').'" method="post">
         <input type="hidden" name="_token" value="'.csrf_token().'">
+        <input type="hidden" id="site_id" name="site_id" value="'.$userSite->site_id.'">
         <div class="row card-body text-center">
 					<div class="col-6">
 						<h4>Site</h4>
 						<div>
-							<strong> '.$site->job_describe.' </strong>
+							<strong> '.strtoupper($userSite['site']->job_describe).' </strong>
 						</div>
 					</div>
 					<div class="col-6">
@@ -126,8 +135,9 @@ class ReceivingReqController extends Controller
 							<strong>'.$total_qty.' </strong>
 						</div>
 					</div>
-				</div>
-				<div class="row card-body text-center">
+				</div>';
+                if($total_qty != 0){
+		$table .='<div class="row card-body text-center">
 					<table class="table table-striped">
 					  <thead>';
 		$table .='<tr>
@@ -160,7 +170,11 @@ class ReceivingReqController extends Controller
 					</div>
 					<div class="text-center">
 						<button name="submit" class="btn btn-primary btn-sm text-center">Submit</button> 
-					</div></div></form>';
+					</div>';
+                }else{
+                    $table .= '<div class="text-center">No item is selected.</div>';
+                }
+        $table .='</div></form>';
         return $table;
     }
 
@@ -174,7 +188,7 @@ class ReceivingReqController extends Controller
     	return view('Receiving.Request.show', compact('request'));
     }
 
-    public function receivingSite(Request $request){
+    /*public function receivingSite(Request $request){
 
     	if($request->site_id != ''){
 			Session::put('site_id', $request->site_id);
@@ -185,7 +199,7 @@ class ReceivingReqController extends Controller
     	}
 
     	return $flag;
-    }
+    }*/
 
     /**
      * Show the form for editing the specified resource.
@@ -195,12 +209,15 @@ class ReceivingReqController extends Controller
      */
     public function edit(Request $request, $id)
     {
-    	$user 	   = $request->item['user'];
-    	$site_id   = Session::get('site_id');
-        $item_no   = $request->item['item'];
+    	$user 	   = Auth::id();
+
+        $userSite  = SiteManager::where('user_id', $user)->first();
+
+    	$site_id   = $userSite->site_id;
         $item_qty  = $request->item['qty'];
+        $item_no   = $request->item['item'];
+        $item_id   = $request->item['item_id'];
         $warehouse = $request->item['warehouse'];
-        $item_id = $request->item['item_id'];
 
 		$record = TempReceiving::where('user_id', $user)
 					->where('item_number', $item_no)
@@ -266,42 +283,44 @@ class ReceivingReqController extends Controller
         $string = $request->type;
 
         if($search == ""){
-            return redirect()->route('receiving.create');        
+            return redirect()->route('receiving-request.create');        
         }
 
-        $sites = JobMaster::all();
+        $userSite  = SiteManager::with(['site'])
+                        ->where('user_id', Auth::id())->first();
+
         $items = PurchaseItem::has('purchaseStoreQty')
         			->where($string, 'ilike', '%'.$search.'%')
         			->paginate(20);
 
-        return view('Receiving.Request.create', compact('items', 'sites'));
+        return view('Receiving.Request.create', compact('items', 'userSite'));
     }
 
     public function requestApproval(Request $request){
 
-        // ReceivingReq::where('id', $request->request_id)
-        //     ->update(['status' => $request->btnValue]);
+         ReceivingReq::where('id', $request->request_id)
+              ->update(['status' => $request->btnValue]);
 
         $receiving_items = ReceivingItem::where('receiving_id', $request->receiving_id)->get();
 
         if($request->btnValue == 1){
-
-            /*foreach($receiving_items as $item){
+            foreach($receiving_items as $item){
+            //dd([$item->item_id, $item->site_id, gettype($item->qty)]);
 
                 site_item_quantity::where('item_id', $item->item_id)
                     ->where('site_id', $item->site_id)
                     ->increment('quantity', $item->qty);
 
-            }*/
+            }
 
             $flag = 1;
         }elseif($request->btnValue == 2){
-            /*foreach($receiving_items as $item){
+            foreach($receiving_items as $item){
 
-                PurchaseStoreItem::where('item_id', $$item->item_id)
+                PurchaseStoreItem::where('item_id', $item->item_id)
                     ->where('warehouse_id', $item->warehouse_id)
                     ->increment('quantity', $item_qty);
-            }*/
+            }
 
             $flag = 2;
         }
@@ -311,14 +330,20 @@ class ReceivingReqController extends Controller
 
     public function history(){
 
-        $requests = ReceivingReq::with(['warehouse', 'site', 'receiving'])
-                        ->where('status', '<>', 0)->get();
+        $requests = SiteManager::where('user_id', Auth::id())
+                        ->with(['receivingReq'])->first();
 
         return view('Receiving.Request.history', compact('requests'));
     }
 
-    public function receivingDirect(){
-        return view('Receiving.Direct.index');
+    public function challan( $id){
+
+    	$receiving = Receiving::where('id', $id)
+    					->with(['requestItems' => function($query){
+    						$query->with(['purchaseItem']);
+    					}, 'warehouse', 'site'])->first();
+
+        return view('Receiving.Request.challan', compact('receiving'));
     }
 
 }

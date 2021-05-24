@@ -6,7 +6,7 @@
           <h1><i class="fa fa-th-list"></i>&nbsp Application Detail</h1>
         </div>
         <ul >
-          <a href="{{ route('receiving-request.index') }}"><button class="btn btn-info" >back </button></a>
+          <a href="{{ route('receiving-request.index') }}"><button class="btn btn-sm btn-info" >Back </button></a>
         </ul>
       </div>
       <div class="row">

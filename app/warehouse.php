@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class site_manager extends Model
+class warehouse extends Model
 {
-   protected $table= 'acco_users';
+    protected $table= 'prch_warehouses';
     protected $guarded = [];
     public $timestamps = true;
 }

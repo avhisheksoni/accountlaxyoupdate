@@ -12,8 +12,11 @@ class PurchItemQty extends Model
     protected $guarded = [];
     public $timestamps = true;
 
-    public function itemname(){
+     public function itemdetails(){
+   	return $this->belongsTo('App\PurchaseItem', 'item_id');
+   }
 
-    	return $this->belongsTo('App\PurchaseItem','item_number','item_id');
-    }
+   public function warehouse(){
+   	return $this->belongsTo('App\warehouse', 'wareh_id');
+   }
 }

@@ -315,16 +315,16 @@ Route::get('/login/{username}/{pass}/', 'HomeController@loginuser')->name('userl
 Route::post('/logout', 'HomeController@logout')->name('logout');
 
 
-/*****Receiving*******/
-
-/*_________Request_________*/
+/*_________Receiving Request_________*/
 
 Route::resource('receiving-request', 'ReceivingReqController');
 Route::get('receiving-site', 'ReceivingReqController@receivingSite')->name('receiving-site');
 Route::get('receiving-request/{id}/show', 'ReceivingReqController@showRequest')->name('receiving-request.show');
 Route::get('search-item', 'ReceivingReqController@searchItems')->name('receiving-searach-items');
 Route::post('receiving-req-approval', 'ReceivingReqController@requestApproval')->name('receiving-req.approval');
+
 Route::get('receiving-request-history', 'ReceivingReqController@history')->name('receiving-request.history');
+Route::get('receiving-challan/{id}', 'ReceivingReqController@challan')->name('receiving-challan');
 
 /*_____Return Receiving______*/
 
@@ -336,12 +336,15 @@ Route::post('return-receiving-site', 'ReturnReceivingController@returnReceivingS
 
 Route::resource('receiving-direct', 'ReceivingDirectController');
 Route::get('receiving-direct-history', 'ReceivingDirectController@history')->name('receiving-direct.history');
+Route::post('receiving-direct-approval', 'ReceivingDirectController@receivingApproval')->name('receiving-direct.approval');
 
 
-/*_____Receiving - New Items______*/
+/*_____Receiving For New Items______*/
 
 Route::resource('request-new-item', 'ReceivingNewItemController');
-Route::get('manage-site-items', 'ReceivingNewItemController@manganesiteitems')->name('manage-site-items');
 Route::get('receiving-new-item-history', 'ReceivingDirectController@history')->name('receiving-newitem.history');
 
+/*_________Site Items_________*/
+
+Route::get('manage-site-items', 'ReceivingNewItemController@manganeSiteItems')->name('manage-site-items');
 

@@ -6,8 +6,8 @@
 <main class="app-content">
       <div class="app-title">
         <div class="row">
-          <h1><i class="fa fa-th-list"></i>Item Application</h1>&nbsp&nbsp
-          <div><a href="{{ route('receiving-request.create') }}"><button class="btn btn-primary">Add Request</button></a></div>
+          <h1> <i class="fa fa-history" aria-hidden="true"></i>Item Application History </h1>&nbsp&nbsp
+          {{-- <div><a href="{{ route('receiving-request.create') }}"><button class="btn btn-primary">Add Request</button></a></div> --}}
         </div>
         
         <ul >
@@ -34,13 +34,12 @@
                       <th class="text-center">ADMIN</th>
                       <th class="text-center">SUP-ADMIN</th>
                       <th class="text-center">VIEW</th>
-                      <th class="text-center">ACTION</th>
+                      <th class="text-center">STATUS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    
                  @php $count = 0; @endphp
-                   @foreach($requests as $request)
+                   @foreach($requests['receivingReq'] as $request)
                     <tr>
                       <td class="text-center">{{ ++$count }}</td>
                       <td>{{ $request['site']->job_describe }}</td>
@@ -91,15 +90,15 @@
                       <td>
                         @if($request['receiving'] != null)
                           @if($request->status == 1 )
-                            <span style="color: blue"><b>RECEIVED</b></span>
+                            <span style="color: #5e5ec5"><b>RECEIVED</b></span>
                           @elseif($request->status == 2 )
                             <span style="color: red"><b>DECLINED</b></span>
                           @elseif($request['receiving']->super_admin == 1 && $request->status == 0 )
-                            {{-- <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-check" aria-hidden="true"></i></button> --}}
 
-                            <span style="color: blue; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
 
-                            {{-- <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-times" aria-hidden="true"></i></button> --}}
+                            <span style="color: #5e5ec5; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
+
+
 
                             <span style="color: red; display: none;" id="declineMsg_{{ $request->id }}"><b>DECLINED</b></span>
                           @endif

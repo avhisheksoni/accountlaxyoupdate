@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Receiving extends Model
 {
    use SoftDeletes;
-    protected $table= 'acco_receivings';
-    protected $guarded = [];
-    public $timestamps = true;
+    protected $table    = 'acco_receivings';
+    protected $guarded  = [];
+    public $timestamps  = true;
 
     public function site(){
     	return $this->belongsTo('App\JobMaster', 'site_id');

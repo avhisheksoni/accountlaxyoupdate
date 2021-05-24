@@ -22,12 +22,19 @@
     </div>
   </div>
         <ul >
-          <a href="{{ route('receiving-request.index') }}"><button class="btn btn-info" >back </button></a>
+          <a href="{{ route('receiving-request.index') }}"><button class="btn btn-sm btn-info" >Back </button></a>
         </ul>
       </div>
+     
         <div class="col-md-12">
+
           <div class="tile">
-            
+              <div class="row container">
+          <div class="col">
+              <span style="font-size: 20px; font-weight: bold"></i> Site Name -</span>
+              <span style="font-size: 20px; font-weight: bold">{{ strtoupper($userSite['site']->job_describe) }} </span>
+          </div>
+      </div><br>
           	 <div class="col-6" style="float:left">
                 <form action="{{route('receiving-searach-items')}}" method="get">
                 	
@@ -41,7 +48,7 @@
                   </div>
                 </form>
               </div>
-              <div class="col-4" style="float:left">
+              {{-- <div class="col-4" style="float:left">
                   <div>
                     <select id="applicantSite" class="custom-select form-control">
                         <option value="">Select a Site</option>
@@ -52,7 +59,7 @@
                         @endforeach
                     </select>
                   </div>
-              </div>
+              </div> --}}
                <div class="col-2" style="float: right">
                 <button class="btn btn-sm btn-primary" data-shop="" id="requestShow" style="float: right" data-toggle="modal" data-target="#reqModal">Request Items</button>
               </div>
@@ -109,7 +116,7 @@
                             @foreach($item['purchaseStoreQty'] as $qty)
                               <td class="text-center"><div style="float: left;">{{$qty->quantity}} </div> 
                              <div>
-<input type="number" class="emp wharehouse"  name="itemcheck" min="0" style="width: 45px;marks: float: right;" max="{{$qty->quantity}}" data-warehouse="{{ $qty->warehouse_id  }}" data-item="{{$item->item_number}}" data-id="{{ $item->id }}" {{ $qty->quantity <= 0 ? 'disabled' : '' }} value=0> </div>
+<input type="number" class="emp wharehouse"  name="itemcheck" min="0" style="width: 45px;marks: float: right;" max="{{$qty->quantity}}" data-warehouse="{{ $qty->warehouse_id  }}" data-item="{{$item->item_number}}" data-id="{{ $item->id }}" {{ $qty->quantity <= 0 ? 'disabled' : '' }} value=""> </div>
                               </td>
                             @endforeach
                             <td class="text-center">{{$item['unit']->name}}</td>
@@ -132,9 +139,8 @@
 $(document).on('click', '#requestShow', function(e){
   e.preventDefault();
 
-  var check_site  = '{{ Session::has('site_id') }}'
   var user = '{{ Auth::id() }}'
-  if(check_site == true){
+
     $.ajax({
       type: "get",
       url: "/receiving-request/"+user,
@@ -142,26 +148,16 @@ $(document).on('click', '#requestShow', function(e){
         $('#reqDetailTable').html(res);
       }
     })
-  }else{
-    alert('Site is not selected.')
-  }
 })
 
 $(document).ready(function(){
- /*$.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-  });*/
-
   /*******Check if item qty exceed*********/    
   $('.wharehouse').on('change', function(){
 
     var reqItemVal  = $(this).val()
     var itemTotalQty= $(this).attr('max')
-    var check_site  = '{{ Session::has('site_id') }}'
 
-    if(parseInt(itemTotalQty) >= parseInt(reqItemVal) && check_site ){
+    if(parseInt(itemTotalQty) >= parseInt(reqItemVal) ){
       var item = {} ;
 
       item['user']       = '{{ Auth::id() }}'
@@ -169,10 +165,10 @@ $(document).ready(function(){
       item['qty']        = $(this).val()
       item['item_id']    = $(this).data('id')
       item['warehouse']  = $(this).data('warehouse')
-      site               = '{{ Session::get('site_id') }}'
+
       $.ajax({
         method:'GET',
-        url: '/receiving-request/'+site+'/edit',
+        url: '/receiving-request/'+item['user']+'/edit',
         data:{'item':item},
         success:function(data){}
       })
@@ -181,15 +177,10 @@ $(document).ready(function(){
       alert('Requested quantity must be low.')
       $(this).val('0')
 
-    }else if(check_site == false){
-
-      alert('Site is not selected.')
-      $(this).val('0')
-
     }
   })
 
-  $('#applicantSite').on('change', function(){
+  /*$('#applicantSite').on('change', function(){
     var site_id = $('#applicantSite :selected').val()
     $.ajax({
       method: 'GET',
@@ -207,7 +198,7 @@ $(document).ready(function(){
       }
     })
   })
-
+*/
 });
 </script>
      

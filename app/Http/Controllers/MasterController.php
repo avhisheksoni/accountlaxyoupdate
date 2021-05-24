@@ -100,7 +100,8 @@ class MasterController extends Controller
        if(count($qnty) == 0){
           $prch = PurchaseStoreItem::all();
         foreach($prch as $item){
-          $zqi['item_id'] = $item->item_number;
+          $zqi['item_id'] = $item->item_id;
+          $zqi['item_number'] = $item->item_number;
           $zqi['quantity'] = 0;
           $zqi['site_id'] = $add;
           $zqi['unit_id'] = $item->prch_item->unit_id;
@@ -166,9 +167,10 @@ class MasterController extends Controller
           ]);
         job_master::where('id',$id)->update($data);
         // uncommit when item is not present in item_quantity
-         return $prch = PurchaseStoreItem::all();
+         $prch = PurchaseStoreItem::all();
         foreach($prch as $item){
-          $zqi['item_id'] = $item->item_number;
+          $zqi['item_id'] = $item->item_id;
+          $zqi['item_number'] = $item->item_number;
           $zqi['quantity'] = 0;
           $zqi['site_id'] = $id;
           $zqi['unit_id'] = $item->prch_item->unit_id;

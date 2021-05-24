@@ -8,7 +8,7 @@ use App\Receiving;
 use App\JobMaster;
 use Carbon\Carbon;
 use App\UnitMeasure;
-use App\site_manager;
+use App\SiteManager;
 use App\ReceivingReq;
 use App\PurchaseItem;
 use App\ReceivingNew;
@@ -138,9 +138,13 @@ class ReceivingNewItemController extends Controller
     public function manganesiteitems(){
 
       $user_id = Auth()->user()->id;
-      $site_id = site_manager::where('user_id',$user_id)->where('deleted_at','=',null)->first()->site_id;
-      $alloteitem = PurchItemQty::where('site_id',$site_id)->get();
-        
+      $site_id = SiteManager::where('user_id',$user_id)->where('deleted_at','=',null)->first();
+       if($site_id != '')  {     
+       $alloteitem = PurchItemQty::where('site_id',$site_id->site_id)->get();
         return view('Receiving.NewItem.siteitemlist', compact('alloteitem'));
+    }else{
+
+        return view('Receiving.NewItem.noaccess');
+    }
     }
 }

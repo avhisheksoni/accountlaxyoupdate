@@ -11,10 +11,9 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-        	 @if($message = Session::get('message'))
-      <div class="alert alert-success">  {{$message}}
-      </div>
-      @endif
+        	{{-- @if($message = Session::get('message'))
+            <div class="alert alert-success">  {{$message}}</div>
+          @endif --}}
           <div class="tile">
             <div class="tile-body">
                 <div class="row">
