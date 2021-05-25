@@ -7,7 +7,7 @@
         <h1><i class="fa fa-edit"></i>Apply Here</h1>
         <p>Request Form</p>
       </div>
-	    <div class="row">
+	    <!-- <div class="row">
         <div class="col-12">
           <label class="alert alert-success "  id="msg" style="display: none;"></label> 
         </div>
@@ -19,23 +19,20 @@
   	        </div>
           @endif
         </div>
-	  	</div>
+	  	</div> -->
       <ul >
-        <a href="{{ route('request-new-item.index') }}"><button class="btn btn-info" >back </button></a>
+        <a href="{{ route('request-new-item.index') }}"><button class="btn btn-sm btn-info" >Back </button></a>
       </ul>
     </div>
-        <div class="col-md-12">
+        <!-- <div class=""> -->
 			<div class="tile">
-	            @if ($errors->any())
-	                <div class="alert alert-danger">
-	                    <strong>Warning!</strong> Please check your input code<br><br>
-	                    <ul>
-	                        @foreach ($errors->all() as $error)
-	                            <li>{{ $error }}</li>
-	                        @endforeach
-	                    </ul>
-	                </div>
-	            @endif
+        <div class="row container">
+          <div class="col-md-12">
+              <span style="font-size: 20px; font-weight: bold"></i> Site Name -</span>
+              <span style="font-size: 20px; font-weight: bold">{{ strtoupper($userSite['site']->job_describe) }} </span>
+          
+          </div><br>
+      <div class="col-md-12" style="float:left">
             	<form action="{{ route('request-new-item.store') }}" method="post">
                 	@csrf
                   <div class="row">
@@ -45,15 +42,7 @@
                       <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                       
                     </div>
-                    <div class="col-6 form-group">
-                      <label for="current_site">Current Site</label>
-                      <select name="current_site" class="form-control " >
-                        <option value="">Select a Site</option>
-                        @foreach($sites as $site)
-                          <option value="{{$site->id}}">{{$site->job_describe}}</option>
-                        @endforeach
-                      </select>
-                    </div>
+                    
                     <div class="col-6 form-group">
                       <label for="current_site">Warehouse</label>
                       <select name="warehouse" data-srno="1" class="form-control input-sm" required="">
@@ -99,12 +88,12 @@
 			            </tr>
 					</table>
 					<div align="right">
-						<button type="button" name="add_row" id="add_row" class="btn btn-success btn-xs">+</button>
+						<button type="button" name="add_row" id="add_row" class="btn btn-success btn-sm">+</button>
 					</div>
-                	<button type="submit" name="submit" class="btn btn-primary error-w3l-btn px-4" onclick="return confirm('Are you sure you want to submit this from?');">Submit</button>
+                	<button type="submit" name="submit" class="btn btn-sm btn-primary error-w3l-btn px-4" onclick="return confirm('Are you sure you want to submit this from?');">Submit</button>
             	</form>
         	</div>
-      	</div>
+      	<!-- </div> -->
     </main>
 
 <style type="text/css">

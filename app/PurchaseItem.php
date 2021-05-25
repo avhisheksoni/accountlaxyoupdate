@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseItem extends Model
 {
-   use SoftDeletes;
+
     protected $table	= 'prch_items';
     protected $guarded 	= [];
     public $timestamps 	= true;
@@ -20,8 +20,11 @@ class PurchaseItem extends Model
     	return $this->belongsTo('App\UnitMeasure', 'unit_id', 'id');
     }
 
-    // public function itemname(){
+    public function siteItemsQty(){
+        return $this->hasMany('App\PurchItemQty','item_id');
+    }
 
-    //     return $this->belongTo('App\PurchItemQty','item_number','item_id');
-    // }
+    public function siteItemQty(){
+        return $this->hasOne('App\PurchItemQty','item_id');
+    }
 }

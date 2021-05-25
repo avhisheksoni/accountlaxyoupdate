@@ -3,12 +3,12 @@
 <main class="app-content">
       <div class="app-title">
         <div class="row">
-          <h1><i class="fa fa-th-list"></i>&nbsp Application (new items)</h1>
+          <h1><i class="fa fa-th-list"></i>&nbsp Application (new items) History</h1>
             &nbsp&nbsp
-          <div><a href="{{ route('request-new-item.create') }}"><button class="btn btn-sm btn-primary">+ Request</button></a></div>
+          <!-- <div><a href="{{ route('request-new-item.create') }}"><button class="btn btn-sm btn-primary">+ Request</button></a></div> -->
         </div>
         <ul >
-        <a href="{{ route('request-newitem.history') }}"><button class="btn btn-sm btn-info" ><i class="fa fa-history" aria-hidden="true"></i> History </button></a>
+        <a href="{{ route('request-new-item.index') }}"><button class="btn btn-sm btn-info" > Back </button></a>
       </ul>
         </div>
       </div>

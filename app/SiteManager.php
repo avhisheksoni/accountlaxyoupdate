@@ -18,4 +18,7 @@ class SiteManager extends Model
     	return $this->hasMany('App\ReceivingReq', 'site_id', 'site_id');
     }
 
+    public function receiving(){
+    	return $this->hasMany('App\Receiving', 'site_id', 'site_id');
+    }
 }

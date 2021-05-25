@@ -31,8 +31,8 @@
                       <th class="text-center">TO</th>
                       <th class="text-center">DATE</th>
                       <th class="text-center">MANAGER</th>
-                      <th class="text-center">ADMIN</th>
-                      <th class="text-center">SUP-ADMIN</th>
+                      {{-- <th class="text-center">ADMIN</th>
+                      <th class="text-center">SUP-ADMIN</th> --}}
                       <th class="text-center">VIEW</th>
                       <th class="text-center">ACTION</th>
                     </tr>
@@ -52,7 +52,7 @@
 
                           <span style="color: green"><b>APPROVED</b></span>
 
-                        @elseif($request->manager == 0 && $request->complete == 1 )
+                        @elseif($request->manager == 0)
 
                           <span style="color: red"><b>DECLINED</b></span>
 
@@ -62,7 +62,7 @@
 
                         @endif
                       </td>
-                      <td class="text-center">
+                      {{-- <td class="text-center">
                         @if($request->admin == 1 )
 
                           <span style="color: green"><b>APPROVED</b></span>
@@ -91,12 +91,12 @@
                           <span style="color: red"><b>DECLINED</b></span>
 
                         @endif
-                      </td>
+                      </td> --}}
                       <td class="text-center">
                         <a href="{{ route('receiving-direct.show', $request->id ) }}"><button class="btn btn-sm btn-primary " title="Requested Items"id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
 
-                        @if($request->super_admin == 1)
-                          <a href="{{ route('receiving-challan', $request->id ) }}"><button class="btn btn-sm btn-primary " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                        @if($request->manager == 1)
+                          <a href="{{ route('receiving-challan', $request->id ) }}"><button class="btn btn-sm btn-warning " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
                         @endif
                       </td>
                       <td class="text-center">
@@ -108,7 +108,7 @@
 
                             <span style="color: red"><b>DECLINED</b></span>
 
-                          @elseif($request->super_admin == 1 && $request->applicant_status == 0 )
+                          @elseif($request->manager == 1 && $request->applicant_status == 0 )
 
                             <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" title="Accept receiving" data-id="{{ $request->id }}" ><i class="fa fa-check" aria-hidden="true"></i></button>
 

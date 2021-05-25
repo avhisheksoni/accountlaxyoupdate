@@ -26,8 +26,9 @@ class ReceivingReqController extends Controller
      */
     public function index()
     {
-        $site       = SiteManager::where('user_id', Auth::id())->first();
-
+       $site       = SiteManager::where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
+// return $site->site_id;
         $requests   = ReceivingReq::with(['warehouse', 'site', 'receiving'])
                         ->where('site_id', $site->site_id)
                         ->where('status', 0)->get();
@@ -42,8 +43,8 @@ class ReceivingReqController extends Controller
      */
     public function create()
     {
-    	$userSite  = SiteManager::with(['site'])
-                        ->where('user_id', Auth::id())->first();
+    	$userSite  = SiteManager::with(['site'])->where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
 
     	$items = PurchaseItem::has('purchaseStoreQty')
     				->select('id', 'item_number', 'title', 'unit_id')
@@ -116,8 +117,8 @@ class ReceivingReqController extends Controller
     	$total_qty = TempReceiving::where('user_id', $user)
     					->sum('qty');
 
-        $userSite  = SiteManager::with(['site'])
-                        ->where('user_id', Auth::id())->first();
+        $userSite  = SiteManager::with(['site'])->where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
 
         $table = '<form action="'.route('receiving-request.store').'" method="post">
         <input type="hidden" name="_token" value="'.csrf_token().'">
@@ -211,7 +212,7 @@ class ReceivingReqController extends Controller
     {
     	$user 	   = Auth::id();
 
-        $userSite  = SiteManager::where('user_id', $user)->first();
+        $userSite  = SiteManager::where('user_id', $user)->where('deleted_at', null)->first();
 
     	$site_id   = $userSite->site_id;
         $item_qty  = $request->item['qty'];
@@ -286,8 +287,8 @@ class ReceivingReqController extends Controller
             return redirect()->route('receiving-request.create');        
         }
 
-        $userSite  = SiteManager::with(['site'])
-                        ->where('user_id', Auth::id())->first();
+        $userSite  = SiteManager::with(['site'])->where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
 
         $items = PurchaseItem::has('purchaseStoreQty')
         			->where($string, 'ilike', '%'.$search.'%')
@@ -304,22 +305,23 @@ class ReceivingReqController extends Controller
         $receiving_items = ReceivingItem::where('receiving_id', $request->receiving_id)->get();
 
         if($request->btnValue == 1){
+
             foreach($receiving_items as $item){
-            //dd([$item->item_id, $item->site_id, gettype($item->qty)]);
 
                 site_item_quantity::where('item_id', $item->item_id)
                     ->where('site_id', $item->site_id)
+                    ->where('wareh_id', $item->warehouse_id)
                     ->increment('quantity', $item->qty);
-
             }
 
             $flag = 1;
         }elseif($request->btnValue == 2){
+
             foreach($receiving_items as $item){
 
                 PurchaseStoreItem::where('item_id', $item->item_id)
                     ->where('warehouse_id', $item->warehouse_id)
-                    ->increment('quantity', $item_qty);
+                    ->increment('quantity', $item->qty);
             }
 
             $flag = 2;
@@ -330,8 +332,8 @@ class ReceivingReqController extends Controller
 
     public function history(){
 
-        $requests = SiteManager::where('user_id', Auth::id())
-                        ->with(['receivingReq'])->first();
+        $requests = SiteManager::where('user_id', Auth::id())->with(['receivingReq'])
+                        ->where('deleted_at', null)->first();
 
         return view('Receiving.Request.history', compact('requests'));
     }

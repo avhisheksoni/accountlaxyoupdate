@@ -51,7 +51,7 @@
                         @if($request['receiving'] != null)
                           @if($request['receiving']->manager == 1 )
                             <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->manager == 0 && $request['receiving']->complete == 1 )
+                          @elseif($request['receiving']->manager == 0 && $request['receiving']->complete == 2 )
                             <span style="color: red"><b>DECLINED</b></span>
                           @else
                             <b>PENDING</b>
@@ -64,7 +64,7 @@
                         @if($request['receiving'] != null)
                           @if($request['receiving']->admin == 1 )
                             <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->admin == 0 && $request['receiving']->complete == 1 )
+                          @elseif($request['receiving']->admin == 0 && $request['receiving']->complete == 2 )
                             <span style="color: red"><b>DECLINED</b></span>
                           @else
                             <b>PENDING</b>
@@ -77,7 +77,7 @@
                         @if($request['receiving'] != null)
                           @if($request['receiving']->super_admin == 1 )
                             <span style="color: green"><b>APPROVED</b></span>
-                          @elseif($request['receiving']->super_admin == 0 && $request['receiving']->complete == 1 )
+                          @elseif($request['receiving']->super_admin == 0 && $request['receiving']->complete == 2 )
                             <span style="color: red"><b>DECLINED</b></span>
                           @else
                             <b>PENDING</b>
@@ -89,7 +89,7 @@
                       <td class="text-center">
                         <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-sm btn-primary " title="Requested Items" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
                         @if($request['receiving'] != null && $request['receiving']->super_admin == 1)
-                          <a href="{{ route('receiving-challan', $request['receiving']->id ) }}"><button class="btn btn-sm btn-primary " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                          <a href="{{ route('receiving-challan', $request['receiving']->id ) }}"><button class="btn btn-sm btn-warning " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
                         @endif
                       </td>
                       <td>

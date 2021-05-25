@@ -326,12 +326,6 @@ Route::post('receiving-req-approval', 'ReceivingReqController@requestApproval')-
 Route::get('receiving-request-history', 'ReceivingReqController@history')->name('receiving-request.history');
 Route::get('receiving-challan/{id}', 'ReceivingReqController@challan')->name('receiving-challan');
 
-/*_____Return Receiving______*/
-
-Route::resource('return-receiving', 'ReturnReceivingController');
-Route::post('return-fetch-items', 'ReturnReceivingController@fetchItems')->name('return.fetch-items');
-Route::post('return-receiving-site', 'ReturnReceivingController@returnReceivingSite')->name('return-receiving-site');
-
 /*_____Receiving - Direct______*/
 
 Route::resource('receiving-direct', 'ReceivingDirectController');
@@ -342,7 +336,14 @@ Route::post('receiving-direct-approval', 'ReceivingDirectController@receivingApp
 /*_____Receiving For New Items______*/
 
 Route::resource('request-new-item', 'ReceivingNewItemController');
-Route::get('receiving-new-item-history', 'ReceivingDirectController@history')->name('receiving-newitem.history');
+Route::get('request-new-item-history', 'ReceivingNewItemController@history')->name('request-newitem.history');
+
+/*_____Return Receiving______*/
+
+Route::resource('return-receiving', 'ReturnReceivingController');
+Route::post('fetch-items', 'ReturnReceivingController@fetchItems')->name('fetch-items');
+Route::get('return-receiving-history', 'ReturnReceivingController@history')->name('return-receiving.history');
+
 
 /*_________Site Items_________*/
 

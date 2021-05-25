@@ -11,7 +11,7 @@
         </div>
         
         <ul >
-        <a href="{{ route('receiving-direct.index') }}"><button class="btn btn-info" >Back </button></a>
+        <a href="{{ route('receiving-direct.index') }}"><button class="btn btn-sm btn-info" >Back </button></a>
       </ul>
       </div>
       <div class="row">
@@ -31,8 +31,8 @@
                       <th class="text-center">TO</th>
                       <th class="text-center">DATE</th>
                       <th class="text-center">MANAGER</th>
-                      <th class="text-center">ADMIN</th>
-                      <th class="text-center">SUP-ADMIN</th>
+                      {{-- <th class="text-center">ADMIN</th> --}}
+                      {{-- <th class="text-center">SUP-ADMIN</th> --}}
                       <th class="text-center">VIEW</th>
                       <th class="text-center">ACTION</th>
                     </tr>
@@ -41,7 +41,7 @@
                       
                    
                  @php $count = 0; @endphp
-                   @foreach($receivings as $receiving)
+                   @foreach($site['receiving'] as $receiving)
                     <tr>
                       <td class="text-center">{{ ++$count }}</td>
                       <td>{{ $receiving['site']->job_describe }}</td>
@@ -62,7 +62,7 @@
                           <b>PENDING</b>
                         @endif
                       </td>
-                      <td class="text-center">
+                      {{-- <td class="text-center">
                         @if($receiving->admin == 1 )
 
                           <span style="color: green"><b>APPROVED</b></span>
@@ -90,9 +90,12 @@
                           <span style="color: red"><b>DECLINED</b></span>
 
                         @endif
-                      </td>
+                      </td> --}}
                       <td class="text-center">
-                        <a href="{{ route('receiving-request.show', $receiving->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+                        <a href="{{ route('receiving-direct.show', $receiving->id ) }}"><button class="btn btn-sm btn-primary " id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+                        @if($receiving->manager == 1)
+                          <a href="{{ route('receiving-challan', $receiving->id ) }}"><button class="btn btn-sm btn-warning " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                        @endif
                       </td>
                       <td>
 

@@ -43,11 +43,12 @@ class ReceivingNewItemController extends Controller
      */
     public function create(){
 
-        $sites       = JobMaster::all();
+        $userSite    = SiteManager::with(['site'])->where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
     	$units 	     = UnitMeasure::all();
         $warehouses  = PurchaseWarehouse::all();
 
-    	return view('Receiving.NewItem.create', compact('sites', 'warehouses', 'units'));
+    	return view('Receiving.NewItem.create', compact('userSite', 'warehouses', 'units'));
     }
 
     /**
@@ -56,12 +57,15 @@ class ReceivingNewItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //dd($request['item']);
-        $zone= Carbon::now('Asia/Kolkata');
+    public function store(Request $request){
+
+        $zone   = Carbon::now('Asia/Kolkata');
+
+        $site       = SiteManager::where('user_id', Auth::id())
+                        ->where('deleted_at', null)->first();
+
         $newReceiving = ReceivingNew::create([
-                            'site_id'       => $request->current_site,
+                            'site_id'       => $site->site_id,
                             'warehouse_id'  => $request->warehouse,
                             'user_id'       => Auth::id(),
                             'date'          => $zone->format('Y-m-d H:i:s')
@@ -92,8 +96,8 @@ class ReceivingNewItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
-    {
+    public function show(Request $request, $id){
+
         $application   = ReceivingNew::with(['warehouse', 'site', 'receiving', 'items'])
                             ->where('id', $id)
                             ->where('user_id', Auth::id())
@@ -130,9 +134,17 @@ class ReceivingNewItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         //
+    }
+
+    public function history(){
+        
+        $applications   = ReceivingNew::with(['warehouse', 'site', 'receiving'])
+                            ->where('user_id', Auth::id())
+                            ->get();
+
+        return view('Receiving.NewItem.history', compact('applications'));
     }
 
     public function manganesiteitems(){

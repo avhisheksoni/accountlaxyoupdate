@@ -1,167 +1,169 @@
 @extends('layouts.master')
 @section('content')
 
-<div class="app-content">
-	<div class="app-title">
-        <div class="row"><h1><i class="fa fa-th-list"></i>Return Item Application</h1></div>
-	</div>
-    <div class="row">
-        <div class="col-md-8" style="background-color: white">
-             <div id="register_wrapper" style="margin-top: 20px">
-                <input type="hidden" name="employee_id" value="" id="employee_id">
-                
-                <a href="{{ route('receiving.log') }}" id="transfer_manager" class="btn btn-sm btn-info pull-right" target="_blank" title="Transfer Manager">
-                    Manage Transfer</a>
-            <br><br>
 
-            <div class="panel-body form-group">               
-				<div class="col-md-6">
-					<label class="control-label">Select Current Site</label>
-					<select name="site" id="applicantSite" class="form-control" >
-					<option value="">Select Site</option>
-                    	@foreach($sites as $site)
-                      		<option value="{{$site->id}}" @if(Session::has('return_site_id')) {{ Session::get('return_site_id') == $site->id ? 'selected' : '' }} @endif>{{$site->job_describe}}</option>
-						@endforeach
-                    </select>
-				</div>
+
+<main class="app-content">
+      <div class="app-title">
+        <div class="row">
+          <h1><i class="fa fa-th-list"></i>Application for Return</h1>&nbsp&nbsp
+          <div><a href="{{ route('return-receiving.create') }}"><button class="btn btn-sm btn-primary">+ Request</button></a></div>
+        </div>
         
-            </div>
-            <div class="panel-body form-group">
-              {{-- <form  id="mode_form" class="form-horizontal panel panel-default" accept-charset="utf-8"> --}}
-                <div class="row col-md-12">
-                  <div class="col-md-9">
-                        <input type="text" {{-- name="barcode" --}} value="" placeholder="Start typing Item Name or scan Number..." id="item" class="form-control input-sm ui-autocomplete-input" size="50" tabindex="1" autocomplete="off">
+        <ul >
+        <a href="{{ route('return-receiving.history') }}"><button class="btn btn-sm btn-info" >
+        <i class="fa fa-history" aria-hidden="true"></i>History </button></a>
+      </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          @if($message = Session::get('message'))
+            <div class="alert alert-success">  {{$message}}</div>
+          @endif
+        <div class="tile">
 
-                        <input type="hidden" {{-- name="status" --}} value="1">
-                         <span class="ui-helper-hidden-accessible" role="status"></span>
-                            <div id="itemList"></div>
-                  </div>
-                  <div class="col-md-3">
-                        <p class="pull-left" style="font-weight:bold; font-size:1.2em">
-                            Total Qty: <label class="total_qty" value=""></label>
-                            <input type="hidden" {{-- name="total_qty" --}} id="total_qty" value="total_qty">
-                        </p>
-                  </div>
-                </div>
-              {{-- </form> --}}
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="sales_table_100" id="register" style="background-color: #f2f2f2; width: 100%">
-                        <thead>
-                            <tr align="center">
-                                <th style="width:10%;">Action</th>
-                                <th style="width:20%;">Barcode</th>
-                                <th style="width:45%;">Item Name</th>
-                                <th style="width:15%;">Qty.</th>
-                                <th style="width:10%;">Unit.</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           <tr>
-                              <td id="itemBody">
-                                {{-- @include('receivings.itmes-display') --}}
-                              </td>
-                           </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="tile-body">
+              <div class="table-responsive">
+                <table class="table table-bordered thead-dark" id="sampleTable">
+                  <thead>
+                    <tr>
+                      <th class="text-center">#</th>
+                      <th class="text-center">FROM</th>
+                      <th class="text-center">TO</th>
+                      <th class="text-center">DATE</th>
+                      <th class="text-center">MANAGER</th>
+                      <th class="text-center">ADMIN</th>
+                      <th class="text-center">SUP-ADMIN</th>
+                      <th class="text-center">VIEW</th>
+                      <th class="text-center">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                 @php $count = 0; @endphp
+{{--                    @foreach($requests as $request)
+                    <tr>
+                      <td class="text-center">{{ ++$count }}</td>
+                      <td>{{ $request['site']->job_describe }}</td>
+                      <td class="text-center">{{ strtoupper($request['warehouse']->name) }}</td>
+                      <td class="text-center">{{ date("M d, Y : h:i A", strtotime($request->created_at)) }}</td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->manager == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->manager == 0 && $request['receiving']->complete == 2 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->admin == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->admin == 0 && $request['receiving']->complete == 2 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        @if($request['receiving'] != null)
+                          @if($request['receiving']->super_admin == 1 )
+                            <span style="color: green"><b>APPROVED</b></span>
+                          @elseif($request['receiving']->super_admin == 0 && $request['receiving']->complete == 2 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @else
+                            <b>PENDING</b>
+                          @endif
+                        @else
+                          <b>PENDING</b>
+                        @endif
+                      </td>
+                      <td class="text-center">
+                        <a href="{{ route('receiving-request.show', $request->id ) }}"><button class="btn btn-sm btn-primary " title="Requested Items" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
+                        @if($request['receiving'] != null && $request['receiving']->super_admin == 1)
+                          <a href="{{ route('receiving-challan', $request['receiving']->id ) }}"><button class="btn btn-sm btn-warning " title="View Challan" id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                        @endif
+                      </td>
+                      <td>
+                        @if($request['receiving'] != null)
+                          @if($request->status == 1 )
+                            <span style="color: #5e5ec5"><b>RECEIVED</b></span>
+                          @elseif($request->status == 2 )
+                            <span style="color: red"><b>DECLINED</b></span>
+                          @elseif($request['receiving']->super_admin == 1 && $request->status == 0 )
+                            <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-check" aria-hidden="true"></i></button>
+
+                            <span style="color: #5e5ec5; display: none;" id="acceptMsg_{{ $request->id }}"><b>RECEIVED</b></span>
+
+                            <button class="btn btn-sm btn-danger approvalBtn" id="declineBtn_{{ $request->id }}" value="2" data-id="{{ $request->id }}" data-receiving="{{ $request->return_receiving_id }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+
+                            <span style="color: red; display: none;" id="declineMsg_{{ $request->id }}"><b>DECLINED</b></span>
+                          @endif
+                        @endif
+                      </td>
+                    </tr>
+                    @endforeach --}}
+                  </tbody>
+                </table>
+               
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-            <div id="overall_sale" class="panel panel-default" style="margin-top: 20px">
-            	<div class="row">
-                     <div class="col-md-12">
-                     <label class="control-label">Destination Location</label>
-                        <select name="destination" id="destination" class="form-control" >
-                        @foreach($warehouses as $warehouse)
-                          	<option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                       @endforeach
-                        </select>
-                     </div>
-                </div>
-            <div class="panel-body">
-                <div id="finish_sale">
-                    <form action="" id="finish_receiving_form" class="form-horizontal" method="post" accept-charset="utf-8">
-                        <div class="form-group form-group-sm">
-                            <label id="comment_label" for="comment">Comments</label>
-                            <textarea name="comment" cols="40" rows="6" id="comment" class="form-control input-sm"></textarea>
-                            <br>
-                            <a href="{{-- {{route('session_distroy')}} --}}" class="btn btn-sm btn-danger pull-left" id="cancel_receiving_button"><span class="glyphicon glyphicon-remove">&nbsp;</span>Cancel</a>
-                            
-                            <input type="hidden" name="location_owner" value="7">
-
-                            <div class="btn btn-sm btn-success pull-right" id="finish_receiving_button"><span class="glyphicon glyphicon-ok">&nbsp;</span>Finish</div>
-                        </div>
-                    </form>                         
-                </div>
-            </div>
-        </div>
-        </div>
-       &nbsp&nbsp&nbsp
-        
+      </div>
+      <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
     </div>
-      
-</div>
+  </div>
+    </main>
+
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready(function(){
 
-	$('#applicantSite').on('change', function(){
-	    var site_id = $('#applicantSite :selected').val()
-	    var _token = $('input[name="_token"]').val();
-	    $.ajax({
-			method: 'POST',
-			url: '{{ route('return-receiving-site') }}',
-			data:{'site_id': site_id, '_token':_token},
-			success:function(res){
-	        	if(res == 1){
-					alert('Site has been selected.')
-					location.reload();
-		        }else{
-		          alert('No site has been selected.')
-		          location.reload();
+    $(document).on('click', '.approvalBtn', function(){ 
+      var btnValue      = $(this).val()
+      var request_id    = $(this).data("id")
+      var receiving_id  = $(this).data("receiving")
+      var _token = $('input[name="_token"]').val();
 
-		        }
-			}
-		})
-	})
+      $.ajax({
+        type: "POST",
+        url: '{{ route('receiving-req.approval') }}',
+        data:{request_id:request_id, btnValue:btnValue, receiving_id:receiving_id, _token:_token},
+        beforeSend: function() { 
+                   $("#acceptBtn_"+request_id).text(' ...');
+                   $("#acceptBtn_"+request_id).attr('disabled',true);
+                   $("#declineBtn_"+request_id).text(' ...');
+                   $("#declineBtn_"+request_id).attr('disabled',true);
+                 },
+        success:function(res){
+          if(res == 1){
+            
+            $('#acceptBtn_'+request_id).hide()
+            $('#declineBtn_'+request_id).hide()
+            $('#acceptMsg_'+request_id).show()
 
-	$('#item').on('keyup', function(e) {
+          }else if(res == 2){
+            $('#acceptBtn_'+request_id).hide()
+            $('#declineBtn_'+request_id).hide()
+            $('#declineMsg_'+request_id).show()
+          }
+        }
+      })
+    })
 
-		var return_site_id = '{{ Session::get('return_site_id') }}'
-
-        if(Session::has('return_site_id')){
-        	var query = $(this).val();
-	        if (e.keyCode == 13 || e.keyCode == 8 && query !='') {
-
-		        if (query != '') {
-
-		        	alert(query)
-		          var _token = $('input[name="_token"]').val();
-		            $.ajax({
-		              type: 'post',
-		              url: '{{ route("return.fetch-items") }}',
-		              data: {'query':query, '_token':_token},
-		               
-		                success: function(data) {
-		                 //alert(query);
-
-		                    $('#itemList').fadeIn();
-		                    $('#itemList').html(data);
-		                }
-		            });
-		        } else {
-		            $('#itemList').fadeOut();
-		        }
-	     	}
-	     }else{
-	     	alert('Please select site first.')
-	     }
-    });
-})
+});
 </script>
 @endsection
