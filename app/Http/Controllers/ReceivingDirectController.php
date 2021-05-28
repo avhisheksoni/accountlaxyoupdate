@@ -37,8 +37,10 @@ class ReceivingDirectController extends Controller
 
         $requests = Receiving::with(['warehouse', 'site'])
                         ->where('receiving_req_id', 0)
+                        ->where('mode', 0)
+                        ->where('applicant_status', 0)
                         ->where('site_id', $user_site->site_id)->get();
-
+        //dd($requests);
         return view('Receiving.Direct.index', compact('requests'));
     }
 
@@ -151,15 +153,10 @@ class ReceivingDirectController extends Controller
         $site = SiteManager::where('user_id', Auth::id())
                         ->with(['receiving' => function($query){
                             $query->with(['warehouse', 'site'])
-                            ->where('receiving_req_id', 0);
+                        ->where('receiving_req_id', 0)
+                        ->where('mode', 0);
                         }])->where('deleted_at', null)->first();
 
-        /*$receivings = Receiving::where('receiving_req_id', 0)
-                        ->where('')
-                        ->with(['requestItems' => function($query){
-                            $query->with(['purchaseItem']);
-                        }, 'warehouse', 'site'])->get();*/
-        // dd($site);
         return view('Receiving.Direct.history', compact('site'));
     }
 

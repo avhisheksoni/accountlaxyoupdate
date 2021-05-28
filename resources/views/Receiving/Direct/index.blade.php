@@ -43,8 +43,8 @@
                    @foreach($requests as $request)
                     <tr>
                       <td class="text-center">{{ ++$count }}</td>
-                      <td>{{ $request['site']->job_describe }}</td>
-                      <td class="text-center">{{ strtoupper($request['warehouse']->name) }}</td>
+                      <td class="text-center">{{ $request['warehouse'] != null ? strtoupper($request['warehouse']->name) : '' }}</td>
+                      <td class="text-center">{{ $request['site']->job_describe }}</td>
                       <td class="text-center">{{ date("M d, Y : h:i A", strtotime($request->created_at)) }}</td>
                       <td class="text-center">
 
@@ -62,36 +62,6 @@
 
                         @endif
                       </td>
-                      {{-- <td class="text-center">
-                        @if($request->admin == 1 )
-
-                          <span style="color: green"><b>APPROVED</b></span>
-
-                        @elseif($request->admin == 0 && $request->complete == 1 )
-
-                          <b>PENDING</b>
-
-                        @elseif($request->admin == 0 && $request->complete == 2 )
-
-                          <span style="color: red"><b>DECLINED</b></span>
-
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        @if($request->super_admin == 1 )
-
-                          <span style="color: green"><b>APPROVED</b></span>
-
-                        @elseif($request->super_admin == 0 && $request->complete == 1 )
-
-                          <b>PENDING</b>
-
-                        @elseif($request->super_admin == 0 && $request->complete == 2 )
-
-                          <span style="color: red"><b>DECLINED</b></span>
-
-                        @endif
-                      </td> --}}
                       <td class="text-center">
                         <a href="{{ route('receiving-direct.show', $request->id ) }}"><button class="btn btn-sm btn-primary " title="Requested Items"id="requestShow" data-toggle="modal" data-target="#reqModal"><i class="fa fa-lg fa-eye"></i></button></a>
 

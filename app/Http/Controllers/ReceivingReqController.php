@@ -24,11 +24,11 @@ class ReceivingReqController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-       $site       = SiteManager::where('user_id', Auth::id())
+    public function index(){
+
+        $site       = SiteManager::where('user_id', Auth::id())
                         ->where('deleted_at', null)->first();
-// return $site->site_id;
+
         $requests   = ReceivingReq::with(['warehouse', 'site', 'receiving'])
                         ->where('site_id', $site->site_id)
                         ->where('status', 0)->get();
@@ -41,8 +41,8 @@ class ReceivingReqController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
+
     	$userSite  = SiteManager::with(['site'])->where('user_id', Auth::id())
                         ->where('deleted_at', null)->first();
 
@@ -62,8 +62,9 @@ class ReceivingReqController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
+        $zone       = Carbon::now('Asia/Kolkata');
     	$logged_user= Auth::id();
     	$warehouses	= array_unique($request->warehouse);
 
@@ -77,7 +78,8 @@ class ReceivingReqController extends Controller
                                 'site_id'       => 	$tempReq->site_id,
                                 'warehouse_id'  =>  $warehouse,
                                 'remark'  		=>  $request->remark,
-                                'user_id'  		=>  $logged_user
+                                'user_id'  		=>  $logged_user,
+                                'date'          =>  $zone->format('Y-m-d H:i:s')
                             ]);
 
             $tempItems = TempReceiving::where('user_id', $logged_user)
@@ -90,8 +92,7 @@ class ReceivingReqController extends Controller
                     'receiving_request_id'	=>  $receivingReq->id,
                     'item_number'   		=>  $item->item_number,
                     'qty'					=>  $item->qty,
-                    'item_id'               =>  $item->item_id,
-
+                    'item_id'               =>  $item->item_id
                 ]);
             }
 
@@ -109,8 +110,8 @@ class ReceivingReqController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($user)
-    {
+    public function show($user){
+
     	$records   = TempReceiving::where('user_id', $user)
     					->with(['item_name', 'warehouse', 'site'])
     					->get();
@@ -208,8 +209,8 @@ class ReceivingReqController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
-    {
+    public function edit(Request $request, $id){
+
     	$user 	   = Auth::id();
 
         $userSite  = SiteManager::where('user_id', $user)->where('deleted_at', null)->first();

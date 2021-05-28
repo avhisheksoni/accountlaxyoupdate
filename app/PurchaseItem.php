@@ -20,11 +20,12 @@ class PurchaseItem extends Model
     	return $this->belongsTo('App\UnitMeasure', 'unit_id', 'id');
     }
 
+    public function siteItemQty(){
+        return $this->hasOne('App\PurchItemQty','item_id');
+    }
+    
     public function siteItemsQty(){
         return $this->hasMany('App\PurchItemQty','item_id');
     }
 
-    public function siteItemQty(){
-        return $this->hasOne('App\PurchItemQty','item_id');
-    }
 }

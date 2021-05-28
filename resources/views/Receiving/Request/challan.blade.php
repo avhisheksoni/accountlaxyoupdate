@@ -14,7 +14,7 @@
 	<div class="row">
 		<div class="col-md-8">
 			<div class="col-md-1 pull-left">
-		  <a href="{{ route('receiving-request.index') }}" ><div class="btn btn-info btn-sm"><span class="glyphicon glyphicon-print">&nbsp;</span>Back</div></a>
+		  <a href="{{ URL::previous() }}" ><div class="btn btn-info btn-sm"><span class="glyphicon glyphicon-print">&nbsp;</span>Back</div></a>
 		  <!-- <a href="#" ><div class="btn btn-info btn-sm" id="show_list_button"><span class="glyphicon glyphicon-print">&nbsp;</span>Show Item List</div></a> -->
 		</div>&nbsp;
 		</div>

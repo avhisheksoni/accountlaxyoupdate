@@ -146,7 +146,7 @@ class P_assingnController extends Controller
 
     public function pettylist(){
 
-        $petty = vendor_mast::where('vendor_type','2')->paginate(10);
+        $petty = vendor_mast::where('vendor_type','2')->get();
 
         return   view('Passign.petty',compact('petty'));
 

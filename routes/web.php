@@ -341,7 +341,12 @@ Route::get('request-new-item-history', 'ReceivingNewItemController@history')->na
 /*_____Return Receiving______*/
 
 Route::resource('return-receiving', 'ReturnReceivingController');
+Route::get('receiving/set-warehouse', 'ReturnReceivingController@setWarehouse')->name('set-warehouse');
 Route::post('fetch-items', 'ReturnReceivingController@fetchItems')->name('fetch-items');
+Route::post('remove-cart-item', 'ReturnReceivingController@removeCartItem')->name('remove-cart-item');
+Route::post('update-item-qty', 'ReturnReceivingController@updateItemQty')->name('cart-item-qty.update');
+Route::post('store-receiving-cart', 'ReturnReceivingController@storeReceivingCart')->name('receiving-cart.store');
+Route::get('cart-receiving-destroy', 'ReturnReceivingController@destroyCartReceiving')->name('cart-receiving.destroy');
 Route::get('return-receiving-history', 'ReturnReceivingController@history')->name('return-receiving.history');
 
 
