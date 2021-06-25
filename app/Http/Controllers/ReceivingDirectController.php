@@ -25,7 +25,7 @@ class ReceivingDirectController extends Controller
      */
 
     /*
-    *   Applicant Status
+    *   Receiver Status
     *   0 = Pending
     *   1 = Received
     *   2 = Decline
@@ -38,7 +38,7 @@ class ReceivingDirectController extends Controller
         $requests = Receiving::with(['warehouse', 'site'])
                         ->where('receiving_req_id', 0)
                         ->where('mode', 0)
-                        ->where('applicant_status', 0)
+                        ->where('receiver_status', 0)
                         ->where('site_id', $user_site->site_id)->get();
         //dd($requests);
         return view('Receiving.Direct.index', compact('requests'));
@@ -117,7 +117,7 @@ class ReceivingDirectController extends Controller
     public function receivingApproval(Request $request){
 
         Receiving::where('id', $request->receiving_id)
-            ->update(['applicant_status' => $request->btnValue]);
+            ->update(['receiver_status' => $request->btnValue]);
 
         $receiving_items = ReceivingItem::where('receiving_id', $request->receiving_id)->get();
 

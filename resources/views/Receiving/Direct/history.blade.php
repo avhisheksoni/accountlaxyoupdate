@@ -60,11 +60,11 @@
                         @endif
                       </td>
                       <td class="text-center">
-                        @if($receiving->applicant_status == 1 )
+                        @if($receiving->receiver_status == 1 )
                           
                           <span style="color: #5e5ec5; "><b>RECEIVED</b></span>
 
-                        @elseif($receiving->applicant_status == 2 )
+                        @elseif($receiving->receiver_status == 2 )
 
                           <span style="color: red;"><b>DECLINED</b></span>
                         @endif

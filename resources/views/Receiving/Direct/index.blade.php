@@ -70,15 +70,15 @@
                         @endif
                       </td>
                       <td class="text-center">
-                          @if($request->applicant_status == 1 )
+                          @if($request->receiver_status == 1 )
 
                             <span style="color: #5e5ec5"><b>RECEIVED</b></span>
 
-                          @elseif($request->applicant_status == 2 )
+                          @elseif($request->receiver_status == 2 )
 
                             <span style="color: red"><b>DECLINED</b></span>
 
-                          @elseif($request->manager == 1 && $request->applicant_status == 0 )
+                          @elseif($request->manager == 1 && $request->receiver_status == 0 )
 
                             <button class="btn btn-sm btn-info approvalBtn" id="acceptBtn_{{ $request->id }}" value="1" title="Accept receiving" data-id="{{ $request->id }}" ><i class="fa fa-check" aria-hidden="true"></i></button>
 

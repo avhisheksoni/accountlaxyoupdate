@@ -108,17 +108,17 @@ class ReturnReceivingController extends Controller
         Session::put('receivingCart', $insertData);
       }else{
 
-          $receivingCart = Session::get('receivingCart');
+          $receivingCart     = session('receivingCart');
           $sessionCartItems  = '';
 
           foreach ($receivingCart as $key => $value) {
 
-              if($key == $itemData->id){
+            if($key == $itemData->id){
 
-                $sessionCartItems     = Session::get('receivingCart')[$itemData->id];
-                $value['qty']         = $value['qty'] + 1;
-                $receivingCart[$key]  = $value;
-              }
+              $sessionCartItems     = session('receivingCart')[$itemData->id];
+              $value['qty']         = $value['qty'] + 1;
+              $receivingCart[$key]  = $value;
+            }
           }
 
           if($sessionCartItems == null){               
@@ -160,8 +160,9 @@ class ReturnReceivingController extends Controller
 
     public function removeCartItem(Request $request){
 
-      $id   = $request->item_id;
-      Session::forget('receivingCart.'.$id);  
+      $id   = (int)$request->item_id;
+      //dd(Session::get('receivingCart')[5891]);
+      Session::remove('receivingCart.'.$id);  
       $data = Session::get('receivingCart');
 
       return back();

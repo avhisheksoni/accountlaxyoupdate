@@ -193,7 +193,7 @@ $(document).ready(function(){
       url: '{{ route("remove-cart-item") }}',
       data:{'item_id':item_id,_token:_token}  ,              
       success: function(data) {
-         window.location.reload();
+         //window.location.reload();
       }
     });
   });

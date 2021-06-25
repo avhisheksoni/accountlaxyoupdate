@@ -37,7 +37,7 @@
                       <th>Bank_Branch_Adddress</th>
                       <th>Person_Contact</th>
                       <th>Email</th>
-                      <th>  Action_perform</th>
+                      <th>Action_perform</th>
                       @role(['acco_super_admin','acco_admin'])
                       <th>Delete</th>
                       @endrole
@@ -58,7 +58,7 @@
                       <td>{{ $perm->branch }}</td>
                       <td>{{ $perm->contact_person."-".$perm->contact }}</td>
                       <td>{{ $perm->email }}</td>
-                       <td><a href="{{ route('bank-detail-view',[$perm->id])}}"><button class="btn btn-warning"><i class="fa fa-lg fa-eye"></i></button></a><a href="{{ route('bank-edit',[$perm->id])}}"><button class="btn btn-primary"><i class="fa fa-lg fa-edit"></i></button></a></td>
+                       <td><a href="{{ route('bank-detail-view',[$perm->id])}}"><button class="btn btn-warning btn-sm mr-2"><i class="fa fa-lg fa-eye"></i></button></a><a href="{{ route('bank-edit',[$perm->id])}}"><button class="btn btn-primary btn-sm"><i class="fa fa-lg fa-edit"></i></button></a></td>
                        @role(['acco_super_admin','acco_admin'])
                         <td></a>
                           <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="{{ route('bank-delete',[$perm->id])}}"><i class="fa fa-trash"></i></a>
